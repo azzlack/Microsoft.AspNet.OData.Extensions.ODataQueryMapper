@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Microsoft.OData.Extensions.ODataQueryMapper")]
+[assembly: AssemblyTitle("ODataQueryMapper")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Microsoft.OData.Extensions.ODataQueryMapper")]
+[assembly: AssemblyProduct("ODataQueryMapper")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("e77edab6-becd-4474-a712-f6fac9a187df")]
+[assembly: Guid("4c18a484-4720-4e45-b63e-33ab24c92015")]
 
 // Version information for an assembly consists of the following four values:
 //
