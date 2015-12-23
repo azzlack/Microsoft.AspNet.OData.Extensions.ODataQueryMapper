@@ -14,9 +14,9 @@ namespace Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Tests
     
     public partial class Album
     {
-        public long AlbumId { get; set; }
+        public int AlbumId { get; set; }
         public string Title { get; set; }
-        public long ArtistId { get; set; }
+        public int ArtistId { get; set; }
     
         public virtual Artist Artist { get; set; }
     }

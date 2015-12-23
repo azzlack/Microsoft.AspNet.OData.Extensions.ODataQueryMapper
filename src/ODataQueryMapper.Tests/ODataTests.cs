@@ -14,13 +14,13 @@
     {
         private TestServer server;
 
-        [OneTimeSetUp]
+        [TestFixtureSetUp]
         public void TestFixtureSetUp()
         {
             this.server = TestServer.Create<Startup>();
         }
 
-        [OneTimeTearDown]
+        [TestFixtureTearDown]
         public void TestFixtureTearDown()
         {
             this.server.Dispose();
@@ -34,9 +34,10 @@
 
             Console.WriteLine(content);
 
-            var result = JsonConvert.DeserializeObject<IEnumerable<DomainAlbum>>(content);
+            var result = JsonConvert.DeserializeObject<ODataCollection<DomainAlbum>>(content);
 
-            Assert.IsTrue(result.Any(), "API returned no items");
+            Assert.Greater(result.Count, result.Values.Count(), "The API returned the wrong count");
+            Assert.IsTrue(result.Values.Any(), "API returned no items");
         }
 
         [TestCase("$top=10&$count=true")]

@@ -17,13 +17,13 @@
     {
         private TestServer server;
 
-        [OneTimeSetUp]
+        [TestFixtureSetUp]
         public void TestFixtureSetUp()
         {
             this.server = TestServer.Create<Startup>();
         }
 
-        [OneTimeTearDown]
+        [TestFixtureTearDown]
         public void TestFixtureTearDown()
         {
             this.server.Dispose();

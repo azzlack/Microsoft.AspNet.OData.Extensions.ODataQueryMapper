@@ -20,7 +20,7 @@ namespace Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Tests
             this.Album = new HashSet<Album>();
         }
     
-        public long ArtistId { get; set; }
+        public int ArtistId { get; set; }
         public string Name { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

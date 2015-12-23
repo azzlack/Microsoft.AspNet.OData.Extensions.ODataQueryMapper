@@ -98,10 +98,21 @@
                 clauses.Add("$skip", query.Skip.RawValue);
             }
 
+            if (query.Count != null)
+            {
+                clauses.Add("$count", query.Count.RawValue);
+            }
+
+            if (query.SelectExpand != null)
+            {
+                clauses.Add("$select", query.SelectExpand.RawSelect);
+                clauses.Add("$expand", query.SelectExpand.RawExpand);
+            }
+
             var parser = new ODataQueryOptionParser(model, type, source, clauses);
             var context = new ODataQueryContext(model, typeof(TDestination), query.Context.Path);
 
-            return new ODataQuery<TDestination>(clauses, context, parser);
+            return new ODataQuery<TDestination>(clauses, context, query.Request, parser);
         }
 
         /// <summary>Gets the data model.</summary>

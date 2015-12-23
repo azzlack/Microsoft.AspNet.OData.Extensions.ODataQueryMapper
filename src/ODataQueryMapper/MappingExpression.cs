@@ -30,8 +30,8 @@
         /// <returns>This instance.</returns>
         public IMappingExpression<TSource, TDestination> ForMember<T>(Expression<Func<TSource, T>> sourceMember, Expression<Func<TDestination, T>> destinationMember)
         {
-            var sourceExpression = (MemberExpression)sourceMember.Body;
-            var destinationExpression = (MemberExpression)destinationMember.Body;
+            var sourceExpression = this.ExtractExpression(sourceMember);
+            var destinationExpression = this.ExtractExpression(destinationMember);
 
             return this.ForMember(sourceExpression.Member.Name, destinationExpression.Member.Name);
         }
@@ -47,7 +47,7 @@
         /// <returns>This instance.</returns>
         public IMappingExpression<TSource, TDestination> ForMember<T>(string sourceProperty, Expression<Func<TDestination, T>> destinationMember)
         {
-            var destinationExpression = (MemberExpression)destinationMember.Body;
+            var destinationExpression = this.ExtractExpression(destinationMember);
 
             return this.ForMember(sourceProperty, destinationExpression.Member.Name);
         }
@@ -63,6 +63,18 @@
             this.rules.Add(sourceProperty, destinationProperty);
 
             return this;
+        }
+
+        private MemberExpression ExtractExpression<T1, T2>(Expression<Func<T1, T2>> expression)
+        {
+            var memberExpression = expression.Body as MemberExpression ?? ((UnaryExpression)expression.Body).Operand as MemberExpression;
+
+            if (memberExpression == null)
+            {
+                throw new InvalidOperationException($"Unable to map property to {expression.Compile()}");
+            }
+
+            return memberExpression;
         }
     }
 }

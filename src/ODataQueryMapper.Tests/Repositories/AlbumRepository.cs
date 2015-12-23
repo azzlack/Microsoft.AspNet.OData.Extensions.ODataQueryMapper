@@ -10,7 +10,7 @@
     {
         public async Task<IEnumerable<Album>> GetAlbums()
         {
-            using (var context = new ChinookContext())
+            using (var context = new ChinookEntities())
             {
                 return await context.Album.Include(x => x.Artist).ToListAsync();
             }
@@ -18,7 +18,7 @@
 
         public async Task<IEnumerable<Album>> GetAlbums(IODataQuery<Album> query)
         {
-            using (var context = new ChinookContext())
+            using (var context = new ChinookEntities())
             {
                 var r = query.ApplyTo(context.Album.Include(x => x.Artist));
 

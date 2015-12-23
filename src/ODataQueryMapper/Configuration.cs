@@ -45,7 +45,7 @@
         {
             if (this.ruleSets.ContainsKey(typeof(TSource).FullName))
             {
-                return this.ruleSets[typeof(TSource).FullName].OrderBy(x => x.Key.Length).ToDictionary(x => x.Key, x => x.Value);
+                return this.ruleSets[typeof(TSource).FullName].OrderByDescending(x => x.Key.Length).ToDictionary(x => x.Key, x => x.Value);
             }
 
             return new Dictionary<string, string>();
