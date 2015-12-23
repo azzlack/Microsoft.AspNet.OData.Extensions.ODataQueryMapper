@@ -66,6 +66,39 @@ x.CreateMap<DomainAlbum, Album>("album")
     .ForMember("Artist/Value", "ArtistId");
 ```
 
+### Profiles
+It is possible to create mapping profiles as separate classes, letting you better have control over your code:
+
+```csharp
+x.AddProfile<MyProfile>();
+
+public class MyProfile : IMappingProfile
+{
+    public void Configure(IProfileConfiguration configuration)
+    {
+        configuration.CreateMap<DomainArtist, Artist>("artist").ConvertUsing<ArtistConverter>();
+    }
+}
+```
+
+### TypeConverters
+It is also possible to create mapping tables as separate classes, letting you better have control over your code:
+
+```csharp
+x.CreateMap<DomainArtist, Artist>("artist").ConvertUsing<MyConverter>();
+
+public class MyConverter : ITypeConverter<DomainArtist, Artist>
+{
+    public Dictionary<string, string> CreateMappingTable()
+    {
+        return new Dictionary<string, string>()
+                   {
+                       { "Id", "ArtistId" }
+                   };
+    }
+}
+```
+
 # Important Notes
 ### EnableQueryAttribute
 You cannot use the `[EnableQuery]` attribute, as that will process your query twice, once in the `ApplyTo` call, and once when the request is leaving the server. Use the included `[ValidateQuery]` attribute instead. It takes care of validating the query according to your supplied settings, and does not process the result after `ApplyTo` has been called.
