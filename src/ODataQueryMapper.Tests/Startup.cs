@@ -2,16 +2,16 @@
 {
     using AutoMapper;
     using global::Owin;
+    using HibernatingRhinos.Profiler.Appender.EntityFramework;
     using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Tests.Functions;
     using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Tests.Interfaces;
     using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Tests.Models;
+    using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Tests.Profiles;
     using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Tests.Repositories;
     using SimpleInjector;
     using SimpleInjector.Integration.WebApi;
     using System.Web.Http;
     using System.Web.OData.Extensions;
-
-    using HibernatingRhinos.Profiler.Appender.EntityFramework;
 
     public class Startup
     {
@@ -35,8 +35,7 @@
                     {
                         x.CreateMap<DomainAlbum, Album>("album")
                             .ForMember(y => y.Id, y => y.AlbumId);
-                        x.CreateMap<DomainArtist, Artist>("artist")
-                            .ForMember(y => y.Id, y => y.ArtistId);
+                        x.AddProfile<TestProfile>();
                     });
 
             // Set up Automapper

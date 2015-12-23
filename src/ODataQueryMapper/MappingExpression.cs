@@ -10,7 +10,7 @@
         where TDestination : class
     {
         /// <summary>The transform rules.</summary>
-        private readonly Dictionary<string, string> rules;
+        private Dictionary<string, string> rules;
 
         /// <summary>Initializes a new instance of the <see cref="MappingExpression{TSource, TDestination}"/> class.</summary>
         /// <param name="rules">The transform rules.</param>
@@ -63,6 +63,17 @@
             this.rules.Add(sourceProperty, destinationProperty);
 
             return this;
+        }
+
+        /// <summary>Use a custom type converter instance to convert to the destination type.</summary>
+        /// <typeparam name="TTypeConverter">The converter type.</typeparam>
+        public void ConvertUsing<TTypeConverter>() where TTypeConverter : ITypeConverter<TSource, TDestination>
+        {
+            this.rules.Clear();
+            foreach (var rule in Activator.CreateInstance<TTypeConverter>().CreateMappingTable())
+            {
+                this.rules.Add(rule.Key, rule.Value);
+            }
         }
 
         private MemberExpression ExtractExpression<T1, T2>(Expression<Func<T1, T2>> expression)

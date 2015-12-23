@@ -96,5 +96,44 @@
 
             Assert.IsTrue(result.Values.Any(), "API returned no items");
         }
+
+        [Test]
+        public async Task GetArtists_WhenGivenPagedODataQuery_ReturnsArtists()
+        {
+            var response = await this.server.HttpClient.GetAsync($"odata/artist?$top=100");
+            var content = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine(content);
+
+            var result = JsonConvert.DeserializeObject<ODataCollection<DomainAlbum>>(content);
+
+            Assert.AreEqual(50, result.Values.Count(), "Wrong number of items returned");
+            Assert.AreEqual("http://localhost/odata/artist?$top=50&$skip=50", result.NextLink, "NextLink is wrong");
+        }
+
+        [Test]
+        public async Task GetArtists_WhenGivenFilteredODataQuery_ReturnsArtists()
+        {
+            var response = await this.server.HttpClient.GetAsync($"odata/artist?$filter=Id eq 1");
+            var content = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine(content);
+
+            var result = JsonConvert.DeserializeObject<ODataCollection<DomainAlbum>>(content);
+
+            Assert.AreEqual(1, result.Values.First().Id);
+            Assert.AreEqual(1, result.Values.Count(), "Wrong number of items returned");
+        }
+
+        [Test]
+        public async Task GetArtists_WhenGivenSelectODataQuery_ReturnsException()
+        {
+            var response = await this.server.HttpClient.GetAsync($"odata/artist?$select=Title");
+            var content = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine(content);
+
+            Assert.AreEqual(HttpStatusCode.InternalServerError, response.StatusCode);
+        }
     }
 }

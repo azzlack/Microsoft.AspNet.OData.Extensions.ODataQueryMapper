@@ -36,5 +36,9 @@
         /// <param name="destinationProperty">Destination property.</param>
         /// <returns>This instance.</returns>
         IMappingExpression<TSource, TDestination> ForMember(string sourceProperty, string destinationProperty);
+
+        /// <summary>Use a custom type converter instance to convert to the destination type.</summary>
+        /// <typeparam name="TTypeConverter">The converter type.</typeparam>
+        void ConvertUsing<TTypeConverter>() where TTypeConverter : ITypeConverter<TSource, TDestination>;
     }
 }

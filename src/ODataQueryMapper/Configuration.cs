@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Interfaces;
     using Microsoft.OData.Edm;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Web.OData.Builder;
@@ -66,6 +67,15 @@
             this.ruleSets.Add(typeof(TSource).FullName, rules);
 
             return new MappingExpression<TSource, TDestination>(rules);
+        }
+
+        /// <summary>Adds the specified profile.</summary>
+        /// <typeparam name="T">Generic type parameter.</typeparam>
+        public void AddProfile<T>() where T : IMappingProfile
+        {
+            var profile = Activator.CreateInstance<T>();
+
+            profile.Configure(this);
         }
     }
 }
