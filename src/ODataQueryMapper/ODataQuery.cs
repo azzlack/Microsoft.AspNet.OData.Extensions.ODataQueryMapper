@@ -114,5 +114,36 @@
 
             return new ODataQuery<T>(context, request);
         }
+
+        /// <summary>Gets an empty OData query.</summary>
+        /// <typeparam name="T">The OData type.</typeparam>
+        /// <returns>An OData query.</returns>
+        public static IODataQuery<T> Empty<T>() where T : class
+        {
+            var modelBuilder = new ODataConventionModelBuilder();
+            modelBuilder.EntitySet<T>(typeof(T).Name);
+
+            var model = modelBuilder.GetEdmModel();
+
+            var request = new HttpRequestMessage(HttpMethod.Get, $"http://localhost/{typeof(T).Name}");
+            var context = new ODataQueryContext(model, typeof(T), new ODataPath());
+
+            return new ODataQuery<T>(context, request);
+        }
+
+        /// <summary>Gets a default OData query.</summary>
+        /// <typeparam name="T">The OData type.</typeparam>
+        /// <returns>An OData query.</returns>
+        public static IODataQuery<T> Default<T>(HttpRequestMessage request) where T : class
+        {
+            var modelBuilder = new ODataConventionModelBuilder();
+            modelBuilder.EntitySet<T>(typeof(T).Name);
+
+            var model = modelBuilder.GetEdmModel();
+
+            var context = new ODataQueryContext(model, typeof(T), new ODataPath());
+
+            return new ODataQuery<T>(context, request);
+        }
     }
 }
