@@ -23,8 +23,8 @@ This extension allows you to have a different domain model than your database mo
     </dependencies> 
   </metadata>
   <files>
-	<file src="..\..\src\ODataQueryMapper\bin\Release\Sentinel.OAuth.Core.dll" target="net45" />
-	<file src="..\..\src\ODataQueryMapper\bin\Release\Sentinel.OAuth.Core.pdb" target="net45" />
+	<file src="..\..\src\ODataQueryMapper\bin\Release\Microsoft.AspNet.OData.Extensions.ODataQueryMapper.dll" target="net45" />
+	<file src="..\..\src\ODataQueryMapper\bin\Release\Microsoft.AspNet.OData.Extensions.ODataQueryMapper.pdb" target="net45" />
 	<file src="..\..\src\ODataQueryMapper\**\*.cs" exclude="**\obj\**\*.*" target="src" />
   </files>
 </package>
