@@ -11,10 +11,14 @@
     using System.Web.Http;
     using System.Web.OData.Extensions;
 
+    using HibernatingRhinos.Profiler.Appender.EntityFramework;
+
     public class Startup
     {
         public void Configuration(IAppBuilder app)
         {
+            EntityFrameworkProfiler.Initialize();
+
             // Create DI container
             var container = new Container();
             container.Options.DefaultScopedLifestyle = new WebApiRequestLifestyle();

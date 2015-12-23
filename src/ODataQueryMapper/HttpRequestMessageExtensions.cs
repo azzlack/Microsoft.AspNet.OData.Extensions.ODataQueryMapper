@@ -14,5 +14,14 @@
 
             return null;
         }
+        public static ODataQuerySettings ODataQuerySettings(this HttpRequestMessage request)
+        {
+            if (request.Properties.ContainsKey("odata.QuerySettings"))
+            {
+                return request.Properties["odata.QuerySettings"] as ODataQuerySettings;
+            }
+
+            return null;
+        }
     }
 }

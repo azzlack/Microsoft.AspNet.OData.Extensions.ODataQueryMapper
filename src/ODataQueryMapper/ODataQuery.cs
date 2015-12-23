@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Net.Http;
     using System.Web.OData;
+    using System.Web.OData.Extensions;
     using System.Web.OData.Query;
 
     public class ODataQuery<T> : ODataQueryOptions<T>, IODataQuery<T>
@@ -23,6 +24,35 @@
         {
             this.ValidateQuery();
 
+            var querySettings = this.Request.ODataQuerySettings();
+
+            if (querySettings != null)
+            {
+                var r = base.ApplyTo(
+                    collection,
+                    new ODataQuerySettings()
+                    {
+                        EnsureStableOrdering = querySettings.EnsureStableOrdering,
+                        EnableConstantParameterization = querySettings.EnableConstantParameterization,
+                        HandleNullPropagation = querySettings.HandleNullPropagation
+                    }) as IQueryable<T>;
+
+                if (querySettings.PageSize.HasValue)
+                {
+                    int resultsRemoved;
+                    var limitedResults = this.LimitResults(r, querySettings.PageSize.Value, out resultsRemoved);
+
+                    if (resultsRemoved > 0 && this.Request.RequestUri != null && this.Request.ODataProperties().NextLink == null)
+                    {
+                        this.Request.ODataProperties().NextLink = this.Request.GetNextPageLink(querySettings.PageSize.Value);
+                    }
+
+                    return limitedResults;
+                }
+
+                return r;
+            }
+
             return base.ApplyTo(collection) as IQueryable<T>;
         }
 
@@ -35,6 +65,13 @@
             this.ValidateQuery();
 
             return base.ApplyTo(collection, querySettings) as IQueryable<T>;
+        }
+
+        private IQueryable<T> LimitResults(IQueryable<T> collection, int limit, out int resultsRemoved)
+        {
+            resultsRemoved = collection.Count() - limit;
+
+            return collection.Take(limit);
         }
 
         /// <summary>Validates the query.</summary>
