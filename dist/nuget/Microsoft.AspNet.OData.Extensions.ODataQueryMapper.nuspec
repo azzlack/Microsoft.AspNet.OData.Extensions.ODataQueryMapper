@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Microsoft.AspNet.OData.Extensions.ODataQueryMapper</id>
+    <version>1.0.0</version>
+    <title>ODataQueryMapper Extension for Microsoft.AspNet.OData</title>
+    <authors>Ove Andersen</authors>
+    <owners>EyeCatch</owners>
+    <licenseUrl>http://www.eyecatch.no/licenses/apache-20/</licenseUrl>
+    <projectUrl>https://github.com/azzlack/Microsoft.AspNet.OData.Extensions.ODataQueryMapper</projectUrl>
+    <iconUrl>http://www.eyecatch.no/favicon.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A query mapper for OData v4.0, Automapper style. 
+	
+This extension allows you to have a different domain model than your database model, and still be able to pass the OData query down to the database..</description>
+    <summary>A query mapper for OData v4.0, Automapper style. </summary>
+	<releaseNotes></releaseNotes>
+    <copyright>Copyright EyeCatch 2015</copyright>
+    <language>en-US</language>
+    <tags>odata webapi transform mapper mapping eyecatch</tags>
+    <dependencies>
+	  <dependency id="Microsoft.AspNet.OData" version="5.7.0" />
+    </dependencies> 
+  </metadata>
+  <files>
+	<file src="..\..\src\ODataQueryMapper\bin\Release\Sentinel.OAuth.Core.dll" target="net45" />
+	<file src="..\..\src\ODataQueryMapper\bin\Release\Sentinel.OAuth.Core.pdb" target="net45" />
+	<file src="..\..\src\ODataQueryMapper\**\*.cs" exclude="**\obj\**\*.*" target="src" />
+  </files>
+</package>
