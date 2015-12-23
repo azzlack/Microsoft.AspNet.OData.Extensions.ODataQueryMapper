@@ -25,7 +25,7 @@
             // Set up DI container
             container.RegisterWebApiControllers(config);
 
-            // TODO: Set up ODataQueryMapper
+            // Set up ODataQueryMapper
             ODataQueryMapper.Initialize(
                 x =>
                     {
