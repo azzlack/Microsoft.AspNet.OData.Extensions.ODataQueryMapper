@@ -8,12 +8,12 @@
         /// <summary>Applies the OData query to the specified collection.</summary>
         /// <param name="collection">The collection.</param>
         /// <returns>The processed collection.</returns>
-        IQueryable<T> ApplyTo(IQueryable<T> collection);
+        IODataQueryable<T> ApplyTo(IQueryable<T> collection);
 
         /// <summary>Applies to described by query.</summary>
         /// <param name="collection">The collection.</param>
         /// <param name="querySettings">The query settings.</param>
         /// <returns>The processed collection.</returns>
-        IQueryable<T> ApplyTo(IQueryable<T> collection, ODataQuerySettings querySettings);
+        IODataQueryable<T> ApplyTo(IQueryable<T> collection, ODataQuerySettings querySettings);
     }
 }

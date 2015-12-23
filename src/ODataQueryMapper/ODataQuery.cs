@@ -20,7 +20,7 @@
         /// <summary>Applies the OData query to the specified collection.</summary>
         /// <param name="collection">The collection.</param>
         /// <returns>The processed collection.</returns>
-        public IQueryable<T> ApplyTo(IQueryable<T> collection)
+        public IODataQueryable<T> ApplyTo(IQueryable<T> collection)
         {
             this.ValidateQuery();
 
@@ -28,7 +28,9 @@
 
             if (querySettings != null)
             {
-                var r = base.ApplyTo(
+                var total = collection.Count();
+
+                var settingsResult = base.ApplyTo(
                     collection,
                     new ODataQuerySettings()
                     {
@@ -40,38 +42,43 @@
                 if (querySettings.PageSize.HasValue)
                 {
                     int resultsRemoved;
-                    var limitedResults = this.LimitResults(r, querySettings.PageSize.Value, out resultsRemoved);
+                    var limitedResults = this.LimitResults(settingsResult, total, querySettings.PageSize.Value, out resultsRemoved);
 
                     if (resultsRemoved > 0 && this.Request.RequestUri != null && this.Request.ODataProperties().NextLink == null)
                     {
-                        this.Request.ODataProperties().NextLink = this.Request.GetNextPageLink(querySettings.PageSize.Value);
+                        limitedResults.NextLink = this.Request.GetNextPageLink(querySettings.PageSize.Value);
+                        this.Request.ODataProperties().NextLink = limitedResults.NextLink;
                     }
 
                     return limitedResults;
                 }
 
-                return r;
+                return new ODataQueryable<T>(settingsResult, settingsResult.Count());
             }
 
-            return base.ApplyTo(collection) as IQueryable<T>;
+            var result = base.ApplyTo(collection) as IQueryable<T>;
+
+            return new ODataQueryable<T>(result, result.Count());
         }
 
         /// <summary>Applies to described by query.</summary>
         /// <param name="collection">The collection.</param>
         /// <param name="querySettings">The query settings.</param>
         /// <returns>The processed collection.</returns>
-        public IQueryable<T> ApplyTo(IQueryable<T> collection, ODataQuerySettings querySettings)
+        public IODataQueryable<T> ApplyTo(IQueryable<T> collection, ODataQuerySettings querySettings)
         {
             this.ValidateQuery();
 
-            return base.ApplyTo(collection, querySettings) as IQueryable<T>;
+            var result = base.ApplyTo(collection, querySettings) as IQueryable<T>;
+
+            return new ODataQueryable<T>(result, result.Count());
         }
 
-        private IQueryable<T> LimitResults(IQueryable<T> collection, int limit, out int resultsRemoved)
+        private IODataQueryable<T> LimitResults(IQueryable<T> collection, int total, int limit, out int resultsRemoved)
         {
-            resultsRemoved = collection.Count() - limit;
+            resultsRemoved = total - limit;
 
-            return collection.Take(limit);
+            return new ODataQueryable<T>(collection.Take(limit), total);
         }
 
         /// <summary>Validates the query.</summary>
