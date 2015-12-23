@@ -104,9 +104,9 @@ public class MyConverter : ITypeConverter<DomainArtist, Artist>
 You cannot use the `[EnableQuery]` attribute, as that will process your query twice, once in the `ApplyTo` call, and once when the request is leaving the server. Use the included `[ValidateQuery]` attribute instead. It takes care of validating the query according to your supplied settings, and does not process the result after `ApplyTo` has been called.
 
 ### Nested properties
-If you want to perform filtering on a nested property on your domain model, like `Artist.Name`, you need to use the string version of `ForMember` like this:
+If you want to perform filtering on a nested property on your domain model, like `Artist.Id`, you need to use the string version of `ForMember` like this:
 
 ```csharp
 x.CreateMap<DomainAlbum, Album>("album")
-    .ForMember("Artist/Value", "ArtistId");
+    .ForMember("Artist/Id", "ArtistId");
 ```  
