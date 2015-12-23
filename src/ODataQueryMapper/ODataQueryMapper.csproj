@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration.cs" />
+    <Compile Include="HttpRequestMessageExtensions.cs" />
     <Compile Include="Interfaces\IConfiguration.cs" />
     <Compile Include="Interfaces\IMappingExpression.cs" />
     <Compile Include="Interfaces\IODataQuery.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="ODataQueryMapper.cs" />
     <Compile Include="ODataQueryOptionsFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ValidateQueryAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -11,7 +11,7 @@
     using System.Web.OData.Routing;
 
     [ODataRoutePrefix("artist")]
-    [EnableQuery(AllowedQueryOptions = AllowedQueryOptions.All, PageSize = 50)]
+    [ValidateQuery(AllowedQueryOptions = AllowedQueryOptions.Filter | AllowedQueryOptions.Count | AllowedQueryOptions.OrderBy | AllowedQueryOptions.Skip | AllowedQueryOptions.Top, PageSize = 50)]
     public class ArtistODataController : ODataController
     {
         private readonly IArtistFunctions artistFunctions;

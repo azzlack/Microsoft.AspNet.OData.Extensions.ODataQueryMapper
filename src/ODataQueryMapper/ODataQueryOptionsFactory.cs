@@ -4,8 +4,10 @@
     using Microsoft.OData.Edm;
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Net.Http;
+    using System.Threading.Tasks;
     using System.Web.OData;
 
     public class ODataQueryOptionsFactory : IODataQueryOptionsFactory
@@ -61,12 +63,33 @@
                 Version = req.Version
             };
 
-            // TODO: Clone the request content
+            // Clone the request content
+            if (req.Content != null)
+            {
+                var ms = new MemoryStream();
+
+                Task.Run(
+                    async () =>
+                        {
+                            await req.Content.CopyToAsync(ms).ConfigureAwait(false);
+                        }).GetAwaiter().GetResult();
+
+                ms.Position = 0;
+                clone.Content = new StreamContent(ms);
+
+                if (req.Content.Headers != null)
+                {
+                    foreach (var header in req.Content.Headers)
+                    {
+                        clone.Content.Headers.Add(header.Key, header.Value);
+                    }
+                }
+            }
 
             // Clone properties
-            foreach (var prop in req.Properties)
+            foreach (var property in req.Properties)
             {
-                clone.Properties.Add(prop);
+                clone.Properties.Add(property);
             }
 
             // Clone headers
@@ -92,7 +115,8 @@
                     var str = string.Empty;
                     foreach (var navigationProperty in enumerable)
                     {
-                        if (this.GetPropertyRestrictions(navigationProperty, context.Model).Restrictions.AutoExpand)
+                        var propertyRestrictions = this.GetPropertyRestrictions(navigationProperty, context.Model);
+                        if (propertyRestrictions != null && propertyRestrictions.Restrictions.AutoExpand)
                         {
                             if (!string.IsNullOrEmpty(str))
                             {

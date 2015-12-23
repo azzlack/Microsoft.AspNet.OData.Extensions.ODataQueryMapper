@@ -21,6 +21,8 @@
         /// <returns>The processed collection.</returns>
         public IQueryable<T> ApplyTo(IQueryable<T> collection)
         {
+            this.ValidateQuery();
+
             return base.ApplyTo(collection) as IQueryable<T>;
         }
 
@@ -30,7 +32,20 @@
         /// <returns>The processed collection.</returns>
         public IQueryable<T> ApplyTo(IQueryable<T> collection, ODataQuerySettings querySettings)
         {
+            this.ValidateQuery();
+
             return base.ApplyTo(collection, querySettings) as IQueryable<T>;
+        }
+
+        /// <summary>Validates the query.</summary>
+        private void ValidateQuery()
+        {
+            var settings = this.Request.ODataValidationSettings();
+
+            if (settings != null)
+            {
+                this.Validate(settings);
+            }
         }
     }
 }

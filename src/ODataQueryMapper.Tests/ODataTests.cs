@@ -25,6 +25,7 @@
             this.server.Dispose();
         }
 
+        [TestCase("")]
         [TestCase("$top=10&$count=true")]
         [TestCase("$top=10")]
         [TestCase("$top=50&$skip=50")]
@@ -68,9 +69,24 @@
             Assert.AreEqual(1, result.Values.Count(), "Wrong number of items returned");
         }
 
+        [Test]
+        public async Task GetAlbums_WhenGivenSelectODataQuery_ReturnsException()
+        {
+            var response = await this.server.HttpClient.GetAsync($"odata/album?$select=Title");
+            var content = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine(content);
+
+            var result = JsonConvert.DeserializeObject<ODataCollection<DomainAlbum>>(content);
+
+            Assert.AreEqual(1, result.Values.First().Id);
+            Assert.AreEqual(1, result.Values.Count(), "Wrong number of items returned");
+        }
+
+        [TestCase("")]
         [TestCase("$top=10&$count=true")]
         [TestCase("$top=10")]
-        [TestCase("$skip=10&$top=10&$count=true")]
+        [TestCase("$top=50&$skip=50")]
         public async Task GetArtists_WhenGivenSimpleODataQuery_ReturnsArtists(string query)
         {
             var response = await this.server.HttpClient.GetAsync($"odata/artist?{query}");
