@@ -48,9 +48,34 @@
 
             builder.Query = string.Join("&", querystring.Select(x => $"{x.Key}={x.Value}"));
 
-            request.RequestUri = builder.Uri;
+            var mappedRequest = this.Clone(request);
+            mappedRequest.RequestUri = builder.Uri;
 
-            return new ODataQuery<T>(context, request);
+            return new ODataQuery<T>(context, mappedRequest);
+        }
+
+        private HttpRequestMessage Clone(HttpRequestMessage req)
+        {
+            var clone = new HttpRequestMessage(req.Method, req.RequestUri)
+            {
+                Version = req.Version
+            };
+
+            // TODO: Clone the request content
+
+            // Clone properties
+            foreach (var prop in req.Properties)
+            {
+                clone.Properties.Add(prop);
+            }
+
+            // Clone headers
+            foreach (var header in req.Headers)
+            {
+                clone.Headers.TryAddWithoutValidation(header.Key, header.Value);
+            }
+
+            return clone;
         }
 
         private IDictionary<string, string> GetQueryParameters(HttpRequestMessage request, ODataQueryContext context)
