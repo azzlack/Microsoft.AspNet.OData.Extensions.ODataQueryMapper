@@ -27,7 +27,7 @@
 
         [TestCase("$top=10&$count=true")]
         [TestCase("$top=10")]
-        [TestCase("$skip=10&$top=10&$count=true")]
+        [TestCase("$top=50&$skip=50")]
         public async Task GetAlbums_WhenGivenSimpleODataQuery_ReturnsAlbums(string query)
         {
             var response = await this.server.HttpClient.GetAsync($"odata/album?{query}");
@@ -52,6 +52,20 @@
 
             Assert.AreEqual(50, result.Values.Count(), "Wrong number of items returned");
             Assert.AreEqual("http://localhost/odata/album?$top=50&$skip=50", result.NextLink, "NextLink is wrong");
+        }
+
+        [Test]
+        public async Task GetAlbums_WhenGivenFilteredODataQuery_ReturnsAlbums()
+        {
+            var response = await this.server.HttpClient.GetAsync($"odata/album?$filter=Id eq 1");
+            var content = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine(content);
+
+            var result = JsonConvert.DeserializeObject<ODataCollection<DomainAlbum>>(content);
+
+            Assert.AreEqual(1, result.Values.First().Id);
+            Assert.AreEqual(1, result.Values.Count(), "Wrong number of items returned");
         }
 
         [TestCase("$top=10&$count=true")]

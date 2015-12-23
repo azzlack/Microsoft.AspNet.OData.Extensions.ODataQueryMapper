@@ -46,6 +46,8 @@
                 querystring["$select"] = clauses["$select"];
             }
 
+            builder.Query = string.Join("&", querystring.Select(x => $"{x.Key}={x.Value}"));
+
             request.RequestUri = builder.Uri;
 
             return new ODataQuery<T>(context, request);
