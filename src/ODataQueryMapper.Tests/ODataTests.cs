@@ -5,7 +5,6 @@
     using Newtonsoft.Json;
     using NUnit.Framework;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -27,7 +26,9 @@
         }
 
         [TestCase("$top=10&$count=true")]
-        public async Task GetAlbums_WhenGivenODataQuery_ReturnsAlbums(string query)
+        [TestCase("$top=10")]
+        [TestCase("$skip=10&$top=10&$count=true")]
+        public async Task GetAlbums_WhenGivenSimpleODataQuery_ReturnsAlbums(string query)
         {
             var response = await this.server.HttpClient.GetAsync($"odata/album?{query}");
             var content = await response.Content.ReadAsStringAsync();
@@ -36,21 +37,36 @@
 
             var result = JsonConvert.DeserializeObject<ODataCollection<DomainAlbum>>(content);
 
-            Assert.Greater(result.Count, result.Values.Count(), "The API returned the wrong count");
             Assert.IsTrue(result.Values.Any(), "API returned no items");
         }
 
+        [Test]
+        public async Task GetAlbums_WhenGivenPagedODataQuery_ReturnsAlbums()
+        {
+            var response = await this.server.HttpClient.GetAsync($"odata/album?$top=100");
+            var content = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine(content);
+
+            var result = JsonConvert.DeserializeObject<ODataCollection<DomainAlbum>>(content);
+
+            Assert.AreEqual(50, result.Values.Count(), "Wrong number of items returned");
+            Assert.AreEqual("http://localhost/odata/album?$top=50&$skip=50", result.NextLink, "NextLink is wrong");
+        }
+
         [TestCase("$top=10&$count=true")]
-        public async Task GetArtists_WhenGivenODataQuery_ReturnsArtists(string query)
+        [TestCase("$top=10")]
+        [TestCase("$skip=10&$top=10&$count=true")]
+        public async Task GetArtists_WhenGivenSimpleODataQuery_ReturnsArtists(string query)
         {
             var response = await this.server.HttpClient.GetAsync($"odata/artist?{query}");
             var content = await response.Content.ReadAsStringAsync();
 
             Console.WriteLine(content);
 
-            var result = JsonConvert.DeserializeObject<IEnumerable<DomainArtist>>(content);
+            var result = JsonConvert.DeserializeObject<ODataCollection<DomainArtist>>(content);
 
-            Assert.IsTrue(result.Any(), "API returned no items");
+            Assert.IsTrue(result.Values.Any(), "API returned no items");
         }
     }
 }

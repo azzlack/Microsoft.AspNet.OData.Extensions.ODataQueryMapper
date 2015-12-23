@@ -10,21 +10,21 @@
     using System.Web.OData.Query;
     using System.Web.OData.Routing;
 
-    [ODataRoutePrefix("album")]
+    [ODataRoutePrefix("artist")]
     [EnableQuery(AllowedQueryOptions = AllowedQueryOptions.All, PageSize = 50)]
-    public class AlbumODataController : ODataController
+    public class ArtistODataController : ODataController
     {
-        private readonly IAlbumFunctions albumFunctions;
+        private readonly IArtistFunctions artistFunctions;
 
-        public AlbumODataController(IAlbumFunctions albumFunctions)
+        public ArtistODataController(IArtistFunctions artistFunctions)
         {
-            this.albumFunctions = albumFunctions;
+            this.artistFunctions = artistFunctions;
         }
 
         [ODataRoute]
-        public async Task<IHttpActionResult> Get(ODataQueryOptions<DomainAlbum> query)
+        public async Task<IHttpActionResult> Get(ODataQueryOptions<DomainArtist> query)
         {
-            var result = await this.albumFunctions.GetAlbums(query);
+            var result = await this.artistFunctions.GetArtists(query);
 
             if (result != null && result.Any())
             {

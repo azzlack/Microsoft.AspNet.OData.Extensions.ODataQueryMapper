@@ -177,6 +177,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Chinook.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\ArtistODataController.cs" />
     <Compile Include="Controllers\AlbumODataController.cs" />
     <Compile Include="Models\ODataCollection.cs" />
     <Compile Include="ODataTests.cs" />

@@ -13,5 +13,8 @@
 
         [JsonProperty("@odata.context")]
         public string Context { get; set; }
+
+        [JsonProperty("@odata.nextLink")]
+        public string NextLink { get; set; }
     }
 }

@@ -1,7 +1,6 @@
 ﻿namespace Microsoft.AspNet.OData.Extensions.ODataQueryMapper
 {
     using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Interfaces;
-    using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Edm;
     using System;
     using System.Collections.Generic;
@@ -14,11 +13,16 @@
     public class ODataQueryMapper : IODataQueryMapper
     {
         /// <summary>The singleton.</summary>
-        private static readonly Lazy<IODataQueryMapper> Singleton = new Lazy<IODataQueryMapper>(() => new ODataQueryMapper());
+        private static readonly Lazy<IODataQueryMapper> Singleton = new Lazy<IODataQueryMapper>(() => new ODataQueryMapper(new ODataQueryOptionsFactory()));
+
+        /// <summary>The odata query options factory.</summary>
+        private readonly IODataQueryOptionsFactory odataDataQueryOptionsFactory;
 
         /// <summary>Initializes a new instance of the <see cref="ODataQueryMapper" /> class.</summary>
-        internal ODataQueryMapper()
+        /// <param name="odataDataQueryOptionsFactory">The odata query options factory.</param>
+        internal ODataQueryMapper(IODataQueryOptionsFactory odataDataQueryOptionsFactory)
         {
+            this.odataDataQueryOptionsFactory = odataDataQueryOptionsFactory;
         }
 
         /// <summary>Gets the configuration.</summary>
@@ -73,8 +77,6 @@
             modelBuilder.EntitySet<TDestination>(typeof(TDestination).Name);
 
             var model = modelBuilder.GetEdmModel();
-            var type = model.FindDeclaredType(typeof(TDestination).FullName);
-            var source = model.FindDeclaredEntitySet(typeof(TDestination).Name);
 
             var clauses = new Dictionary<string, string>();
 
@@ -109,10 +111,9 @@
                 clauses.Add("$expand", query.SelectExpand.RawExpand);
             }
 
-            var parser = new ODataQueryOptionParser(model, type, source, clauses);
             var context = new ODataQueryContext(model, typeof(TDestination), query.Context.Path);
 
-            return new ODataQuery<TDestination>(clauses, context, query.Request, parser);
+            return this.odataDataQueryOptionsFactory.Create<TDestination>(clauses, context, query.Request);
         }
 
         /// <summary>Gets the data model.</summary>

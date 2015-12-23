@@ -31,6 +31,8 @@
                     {
                         x.CreateMap<DomainAlbum, Album>("album")
                             .ForMember(y => y.Id, y => y.AlbumId);
+                        x.CreateMap<DomainArtist, Artist>("artist")
+                            .ForMember(y => y.Id, y => y.ArtistId);
                     });
 
             // Set up Automapper
