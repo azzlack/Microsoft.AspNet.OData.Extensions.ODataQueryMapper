@@ -6,6 +6,7 @@
     using NUnit.Framework;
     using System;
     using System.Linq;
+    using System.Net;
     using System.Threading.Tasks;
 
     [TestFixture]
@@ -77,10 +78,7 @@
 
             Console.WriteLine(content);
 
-            var result = JsonConvert.DeserializeObject<ODataCollection<DomainAlbum>>(content);
-
-            Assert.AreEqual(1, result.Values.First().Id);
-            Assert.AreEqual(1, result.Values.Count(), "Wrong number of items returned");
+            Assert.AreEqual(HttpStatusCode.InternalServerError, response.StatusCode);
         }
 
         [TestCase("")]
