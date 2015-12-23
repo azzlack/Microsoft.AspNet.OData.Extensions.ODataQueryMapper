@@ -1,11 +1,14 @@
 ﻿namespace Microsoft.AspNet.OData.Extensions.ODataQueryMapper
 {
+
     using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Interfaces;
     using System.Linq;
     using System.Net.Http;
     using System.Web.OData;
+    using System.Web.OData.Builder;
     using System.Web.OData.Extensions;
     using System.Web.OData.Query;
+    using System.Web.OData.Routing;
 
     public class ODataQuery<T> : ODataQueryOptions<T>, IODataQuery<T>
     {
@@ -90,6 +93,26 @@
             {
                 this.Validate(settings);
             }
+        }
+    }
+
+    public static class ODataQuery
+    {
+        /// <summary>Creates a new OData query from the specified query string.</summary>
+        /// <typeparam name="T">The OData type.</typeparam>
+        /// <param name="query">The query string.</param>
+        /// <returns>An OData query.</returns>
+        public static IODataQuery<T> Create<T>(string query) where T : class
+        {
+            var modelBuilder = new ODataConventionModelBuilder();
+            modelBuilder.EntitySet<T>(typeof(T).Name);
+
+            var model = modelBuilder.GetEdmModel();
+
+            var request = new HttpRequestMessage(HttpMethod.Get, $"http://localhost/{typeof(T).Name}?{query}");
+            var context = new ODataQueryContext(model, typeof(T), new ODataPath());
+
+            return new ODataQuery<T>(context, request);
         }
     }
 }
