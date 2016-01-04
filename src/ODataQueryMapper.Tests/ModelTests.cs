@@ -44,7 +44,7 @@
 
             var p = q.ApplyTo(c);
 
-            Assert.AreEqual(2, p.Total);
+            Assert.AreEqual(2, p.Count);
             Assert.AreEqual(2, p.Count());
         }
 
@@ -74,7 +74,7 @@
 
             var p = q.ApplyTo(c);
 
-            Assert.AreEqual(2, p.Total);
+            Assert.AreEqual(2, p.Count);
             Assert.IsNotNull(p.NextLink);
             Assert.AreEqual(1, p.Count());
         }

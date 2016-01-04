@@ -19,23 +19,28 @@
         public ODataQueryable(IQueryable<T> values, int total)
         {
             this.values = values;
-            this.Total = total;
+
+            this.Count = total;
         }
 
         /// <summary>Gets the total number of items.</summary>
         /// <value>The total number of items.</value>
-        public int Total { get; }
+        public int Count { get; set; }
 
         /// <summary>Gets or sets the link to the next item set.</summary>
         /// <value>The link to the next item set.</value>
-        public Uri NextLink { get; set; }
+        public string NextLink { get; set; }
+
+        /// <summary>Gets or sets the data.</summary>
+        /// <value>The data.</value>
+        public IEnumerable<T> Value => this.values;
 
         /// <summary>Converts this object to a list asynchronously.</summary>
         /// <typeparam name="T">Generic type parameter.</typeparam>
         /// <returns>The list.</returns>
         public Task<List<T>> ToListAsync()
         {
-            // TODO: Find a way to support entity frameworks ToListAsync()
+            // TODO: Find a better way to support entity frameworks ToListAsync()
             var tcs = new TaskCompletionSource<List<T>>();
 
             Task.Run(

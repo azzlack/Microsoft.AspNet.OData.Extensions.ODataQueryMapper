@@ -39,7 +39,7 @@
 
             var result = JsonConvert.DeserializeObject<ODataCollection<DomainAlbum>>(content);
 
-            Assert.IsTrue(result.Values.Any(), "API returned no items");
+            Assert.IsTrue(result.Value.Any(), "API returned no items");
         }
 
         [Test]
@@ -52,7 +52,7 @@
 
             var result = JsonConvert.DeserializeObject<ODataCollection<DomainAlbum>>(content);
 
-            Assert.AreEqual(50, result.Values.Count(), "Wrong number of items returned");
+            Assert.AreEqual(50, result.Value.Count(), "Wrong number of items returned");
             Assert.AreEqual("http://localhost/odata/album?$top=50&$skip=50", result.NextLink, "NextLink is wrong");
         }
 
@@ -66,8 +66,8 @@
 
             var result = JsonConvert.DeserializeObject<ODataCollection<DomainAlbum>>(content);
 
-            Assert.AreEqual(1, result.Values.First().Id);
-            Assert.AreEqual(1, result.Values.Count(), "Wrong number of items returned");
+            Assert.AreEqual(1, result.Value.First().Id);
+            Assert.AreEqual(1, result.Value.Count(), "Wrong number of items returned");
         }
 
         [Test]
@@ -94,7 +94,7 @@
 
             var result = JsonConvert.DeserializeObject<ODataCollection<DomainArtist>>(content);
 
-            Assert.IsTrue(result.Values.Any(), "API returned no items");
+            Assert.IsTrue(result.Value.Any(), "API returned no items");
         }
 
         [Test]
@@ -107,7 +107,7 @@
 
             var result = JsonConvert.DeserializeObject<ODataCollection<DomainAlbum>>(content);
 
-            Assert.AreEqual(50, result.Values.Count(), "Wrong number of items returned");
+            Assert.AreEqual(50, result.Value.Count(), "Wrong number of items returned");
             Assert.AreEqual("http://localhost/odata/artist?$top=50&$skip=50", result.NextLink, "NextLink is wrong");
         }
 
@@ -121,8 +121,8 @@
 
             var result = JsonConvert.DeserializeObject<ODataCollection<DomainAlbum>>(content);
 
-            Assert.AreEqual(1, result.Values.First().Id);
-            Assert.AreEqual(1, result.Values.Count(), "Wrong number of items returned");
+            Assert.AreEqual(1, result.Value.First().Id);
+            Assert.AreEqual(1, result.Value.Count(), "Wrong number of items returned");
         }
 
         [Test]

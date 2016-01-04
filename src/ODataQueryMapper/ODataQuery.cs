@@ -49,8 +49,10 @@
 
                     if (resultsRemoved > 0 && this.Request.RequestUri != null && this.Request.ODataProperties().NextLink == null)
                     {
-                        limitedResults.NextLink = this.Request.GetNextPageLink(querySettings.PageSize.Value);
-                        this.Request.ODataProperties().NextLink = limitedResults.NextLink;
+                        var link = this.Request.GetNextPageLink(querySettings.PageSize.Value);
+
+                        limitedResults.NextLink = link.ToString();
+                        this.Request.ODataProperties().NextLink = link;
                     }
 
                     return limitedResults;

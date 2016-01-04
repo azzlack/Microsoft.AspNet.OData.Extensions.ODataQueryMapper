@@ -71,6 +71,7 @@
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
       <Private>True</Private>
@@ -89,6 +90,7 @@
   <ItemGroup>
     <Compile Include="Configuration.cs" />
     <Compile Include="HttpRequestMessageExtensions.cs" />
+    <Compile Include="Interfaces\IODataCollection.cs" />
     <Compile Include="Interfaces\IODataQueryable.cs" />
     <Compile Include="Interfaces\IProfileConfiguration.cs" />
     <Compile Include="Interfaces\IConfiguration.cs" />
