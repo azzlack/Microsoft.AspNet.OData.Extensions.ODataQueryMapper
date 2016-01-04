@@ -38,18 +38,18 @@
         /// <summary>Converts this object to a list asynchronously.</summary>
         /// <typeparam name="T">Generic type parameter.</typeparam>
         /// <returns>The list.</returns>
-        public Task<List<T>> ToListAsync()
+        public async Task<IODataQueryable<T>> ToListAsync()
         {
             // TODO: Find a better way to support entity frameworks ToListAsync()
-            var tcs = new TaskCompletionSource<List<T>>();
+            var tcs = new TaskCompletionSource<IQueryable<T>>();
 
-            Task.Run(
+            await Task.Run(
                 () =>
                     {
-                        tcs.SetResult(this.values.ToList());
+                        tcs.SetResult(this.values.ToList().AsQueryable());
                     }).ConfigureAwait(false);
 
-            return tcs.Task;
+            return new ODataQueryable<T>(await tcs.Task, this.Count);
         }
 
         /// <summary>

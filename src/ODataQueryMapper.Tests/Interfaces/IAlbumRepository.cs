@@ -8,6 +8,6 @@
     {
         Task<IEnumerable<Album>> GetAlbums();
 
-        Task<IEnumerable<Album>> GetAlbums(IODataQuery<Album> query);
+        Task<IODataQueryable<Album>> GetAlbums(IODataQuery<Album> query);
     }
 }

@@ -101,6 +101,7 @@
     <Compile Include="Interfaces\IODataQueryOptionsFactory.cs" />
     <Compile Include="Interfaces\ITypeConverter.cs" />
     <Compile Include="MappingExpression.cs" />
+    <Compile Include="ODataCollection.cs" />
     <Compile Include="ODataQuery.cs" />
     <Compile Include="ODataQueryable.cs" />
     <Compile Include="ODataQueryMapper.cs" />

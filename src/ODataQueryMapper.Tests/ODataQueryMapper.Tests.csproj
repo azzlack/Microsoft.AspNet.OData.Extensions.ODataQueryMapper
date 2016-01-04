@@ -239,7 +239,6 @@
     <Compile Include="Controllers\ArtistODataController.cs" />
     <Compile Include="Controllers\AlbumODataController.cs" />
     <Compile Include="Converters\ArtistConverter.cs" />
-    <Compile Include="Models\ODataCollection.cs" />
     <Compile Include="ModelTests.cs" />
     <Compile Include="ODataTests.cs" />
     <Compile Include="Controllers\ArtistApiController.cs" />

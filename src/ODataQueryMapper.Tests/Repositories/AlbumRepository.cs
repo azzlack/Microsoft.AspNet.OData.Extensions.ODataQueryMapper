@@ -16,7 +16,7 @@
             }
         }
 
-        public async Task<IEnumerable<Album>> GetAlbums(IODataQuery<Album> query)
+        public async Task<IODataQueryable<Album>> GetAlbums(IODataQuery<Album> query)
         {
             using (var context = new ChinookEntities())
             {

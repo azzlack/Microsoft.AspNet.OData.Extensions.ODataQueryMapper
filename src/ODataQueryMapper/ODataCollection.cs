@@ -1,9 +1,11 @@
-﻿namespace Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Tests.Models
+﻿namespace Microsoft.AspNet.OData.Extensions.ODataQueryMapper
 {
-    using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Interfaces;
-    using Newtonsoft.Json;
     using System.Collections.Generic;
     using System.Runtime.Serialization;
+
+    using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Interfaces;
+
+    using Newtonsoft.Json;
 
     public class ODataCollection<T> : IODataCollection<T>
     {
