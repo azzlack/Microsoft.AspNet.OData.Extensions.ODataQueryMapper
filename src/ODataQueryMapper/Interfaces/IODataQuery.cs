@@ -5,6 +5,10 @@
 
     public interface IODataQuery<T>
     {
+        /// <summary>Gets the <see cref="ODataQueryOptions{T}"/> instance.</summary>
+        /// <value>The ODataQueryOptions instance.</value>
+        ODataQueryOptions<T> Options { get; }
+
         /// <summary>Applies the OData query to the specified collection.</summary>
         /// <param name="collection">The collection.</param>
         /// <returns>The processed collection.</returns>
