@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Tests.Profiles
 {
     using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Interfaces;
+    using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Tests.Configurators;
     using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Tests.Converters;
     using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Tests.Models;
 
@@ -11,6 +12,9 @@
         public void Configure(IProfileConfiguration configuration)
         {
             configuration.CreateMap<DomainArtist, Artist>("artist").ConvertUsing<ArtistConverter>();
+
+            configuration.Configure<DomainTrack>("track").ConfigureUsing<TrackConfigurator>(); // TODO: ITypeConfigurator must be able to map stuff
+            configuration.Configure<DomainTrack>("track").CreateMap<Track>().ConvertUsing<TrackConverter>();
         }
     }
 }

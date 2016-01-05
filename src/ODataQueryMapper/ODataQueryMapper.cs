@@ -74,8 +74,9 @@
 
             // 3. Create new ODataQueryOptions for TDestination
             var modelBuilder = new ODataConventionModelBuilder();
-            modelBuilder.EntitySet<TDestination>(typeof(TDestination).Name);
+            this.Configuration.GetTypeConfiguration<TDestination>(modelBuilder);
 
+            // 5. Generate model and clauses
             var model = modelBuilder.GetEdmModel();
 
             var clauses = new Dictionary<string, string>();

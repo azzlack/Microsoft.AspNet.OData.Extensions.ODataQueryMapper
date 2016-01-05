@@ -34,6 +34,7 @@
                 x =>
                     {
                         x.CreateMap<DomainAlbum, Album>("album")
+                            .ForDestinationEntity(y => y.HasKey(z => z.AlbumId))
                             .ForMember(y => y.Id, y => y.AlbumId);
                         x.AddProfile<TestProfile>();
                     });
@@ -49,14 +50,20 @@
                    x.CreateMap<Artist, DomainArtist>()
                        .ForMember(m => m.Id, y => y.MapFrom(z => z.ArtistId))
                        .ForMember(m => m.Albums, y => y.Ignore());
+                   x.CreateMap<Track, DomainTrack>()
+                       .ForMember(m => m.Wbs, y => y.MapFrom(z => z.TrackId))
+                       .ForMember(m => m.Title, y => y.MapFrom(z => z.Name))
+                       .ForMember(m => m.Album, y => y.MapFrom(z => new Resource<long>() { Value = z.Album.AlbumId, Title = z.Album.Title, Link = $"/api/album/{z.Album.AlbumId}" }));
                });
 
             container.RegisterWebApiRequest(() => ODataQueryMapper.Engine);
             container.RegisterWebApiRequest(() => Mapper.Engine);
             container.RegisterWebApiRequest<IAlbumRepository, AlbumRepository>();
             container.RegisterWebApiRequest<IArtistRepository, ArtistRepository>();
+            container.RegisterWebApiRequest<ITrackRepository, TrackRepository>();
             container.RegisterWebApiRequest<IArtistFunctions, ArtistFunctions>();
             container.RegisterWebApiRequest<IAlbumFunctions, AlbumFunctions>();
+            container.RegisterWebApiRequest<ITrackFunctions, TrackFunctions>();
 
             container.Verify();
 

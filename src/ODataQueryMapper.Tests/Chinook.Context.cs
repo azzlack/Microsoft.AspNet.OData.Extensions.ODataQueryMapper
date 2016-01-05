@@ -27,5 +27,6 @@ namespace Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Tests
     
         public virtual DbSet<Album> Album { get; set; }
         public virtual DbSet<Artist> Artist { get; set; }
+        public virtual DbSet<Track> Track { get; set; }
     }
 }

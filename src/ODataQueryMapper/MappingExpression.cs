@@ -3,19 +3,26 @@
     using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Interfaces;
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq.Expressions;
+    using System.Web.OData.Builder;
 
     public class MappingExpression<TSource, TDestination> : IMappingExpression<TSource, TDestination>
         where TSource : class
         where TDestination : class
     {
+        /// <summary>The type configurations.</summary>
+        private readonly Collection<LambdaExpression> typeConfigurations;
+
         /// <summary>The transform rules.</summary>
-        private Dictionary<string, string> rules;
+        private readonly Dictionary<string, string> rules;
 
         /// <summary>Initializes a new instance of the <see cref="MappingExpression{TSource, TDestination}"/> class.</summary>
+        /// <param name="typeConfigurations">The type configurations.</param>
         /// <param name="rules">The transform rules.</param>
-        internal MappingExpression(Dictionary<string, string> rules)
+        internal MappingExpression(Collection<LambdaExpression> typeConfigurations, Dictionary<string, string> rules)
         {
+            this.typeConfigurations = typeConfigurations;
             this.rules = rules;
         }
 
@@ -61,6 +68,16 @@
         public IMappingExpression<TSource, TDestination> ForMember(string sourceProperty, string destinationProperty)
         {
             this.rules.Add(sourceProperty, destinationProperty);
+
+            return this;
+        }
+
+        /// <summary>Configures the destination entity.</summary>
+        /// <param name="entityConfiguration">The entity configuration expression.</param>
+        /// <returns>This instance.</returns>
+        public IMappingExpression<TSource, TDestination> ForDestinationEntity(Expression<Action<EntityTypeConfiguration<TDestination>>> entityConfiguration)
+        {
+            this.typeConfigurations.Add(entityConfiguration);
 
             return this;
         }

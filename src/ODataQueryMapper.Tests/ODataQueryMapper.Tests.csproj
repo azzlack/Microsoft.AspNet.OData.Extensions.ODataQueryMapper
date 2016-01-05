@@ -236,9 +236,16 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Chinook.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Configurators\TrackConfigurator.cs" />
+    <Compile Include="Controllers\TrackODataController.cs" />
     <Compile Include="Controllers\ArtistODataController.cs" />
     <Compile Include="Controllers\AlbumODataController.cs" />
+    <Compile Include="Converters\TrackConverter.cs" />
     <Compile Include="Converters\ArtistConverter.cs" />
+    <Compile Include="Functions\TrackFunctions.cs" />
+    <Compile Include="Interfaces\ITrackRepository.cs" />
+    <Compile Include="Interfaces\ITrackFunctions.cs" />
+    <Compile Include="Models\DomainTrack.cs" />
     <Compile Include="ModelTests.cs" />
     <Compile Include="ODataTests.cs" />
     <Compile Include="Controllers\ArtistApiController.cs" />
@@ -256,8 +263,12 @@
     <Compile Include="Models\DomainAlbum.cs" />
     <Compile Include="Models\Resource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\TrackRepository.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ApiTests.cs" />
+    <Compile Include="Track.cs">
+      <DependentUpon>Chinook.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

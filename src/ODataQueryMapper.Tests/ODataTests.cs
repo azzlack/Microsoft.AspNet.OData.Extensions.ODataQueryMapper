@@ -135,5 +135,46 @@
 
             Assert.AreEqual(HttpStatusCode.InternalServerError, response.StatusCode);
         }
+
+        [Test]
+        public async Task GetTracks_WhenGivenPagedODataQuery_ReturnsTracks()
+        {
+            var response = await this.server.HttpClient.GetAsync($"odata/track?$top=100");
+            var content = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine(content);
+
+            var result = JsonConvert.DeserializeObject<ODataCollection<DomainTrack>>(content);
+
+            Assert.AreEqual(50, result.Value.Count(), "Wrong number of items returned");
+            Assert.AreEqual("http://localhost/odata/track?$top=50&$skip=50", result.NextLink, "NextLink is wrong");
+        }
+
+        [Test]
+        public async Task GetTrack_WhenGivenTrackId_ReturnsTrack()
+        {
+            var response = await this.server.HttpClient.GetAsync($"odata/track(1)");
+            var content = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine(content);
+
+            var result = JsonConvert.DeserializeObject<DomainTrack>(content);
+
+            Assert.AreEqual(1, result.Wbs);
+        }
+
+        [TestCase(1)]
+        [TestCase(100)]
+        public async Task GetTracks_WhenGivenAlbumId_ReturnsAlbumTracks(long albumId)
+        {
+            var response = await this.server.HttpClient.GetAsync($"odata/track?$filter=Album/Value eq {albumId}");
+            var content = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine(content);
+
+            var result = JsonConvert.DeserializeObject<ODataCollection<DomainTrack>>(content);
+
+            Assert.IsTrue(result.Value.All(x => x.Album.Value == albumId), "The tracks have wrong album");
+        }
     }
 }

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq.Expressions;
+    using System.Web.OData.Builder;
 
     public interface IMappingExpression<TSource, TDestination>
         where TSource : class
@@ -40,5 +41,10 @@
         /// <summary>Use a custom type converter instance to convert to the destination type.</summary>
         /// <typeparam name="TTypeConverter">The converter type.</typeparam>
         void ConvertUsing<TTypeConverter>() where TTypeConverter : ITypeConverter<TSource, TDestination>;
+
+        /// <summary>Configures the destination entity.</summary>
+        /// <param name="entityConfiguration">The entity configuration expression.</param>
+        /// <returns>This instance.</returns>
+        IMappingExpression<TSource, TDestination> ForDestinationEntity(Expression<Action<EntityTypeConfiguration<TDestination>>> entityConfiguration);
     }
 }

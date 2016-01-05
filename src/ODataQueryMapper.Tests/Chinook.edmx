@@ -1,4 +1,4 @@
-<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+﻿<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
 <!-- EF Runtime content -->
 <edmx:Runtime>
 <!-- SSDL content -->
@@ -7,9 +7,14 @@
   <EntityContainer Name="ChinookModelStoreContainer">
     <EntitySet Name="Album" EntityType="ChinookModel.Store.Album" store:Type="Tables" />
     <EntitySet Name="Artist" EntityType="ChinookModel.Store.Artist" store:Type="Tables" />
+    <EntitySet Name="Track" EntityType="ChinookModel.Store.Track" store:Type="Tables" />
     <AssociationSet Name="FK_AlbumArtistId" Association="ChinookModel.Store.FK_AlbumArtistId">
       <End Role="Artist" EntitySet="Artist" />
       <End Role="Album" EntitySet="Album" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TrackAlbumId" Association="ChinookModel.Store.FK_TrackAlbumId">
+      <End Role="Album" EntitySet="Album" />
+      <End Role="Track" EntitySet="Track" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="Album">
@@ -27,6 +32,20 @@
     <Property Name="ArtistId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="Name" Type="nvarchar" MaxLength="120" />
   </EntityType>
+  <EntityType Name="Track">
+    <Key>
+      <PropertyRef Name="TrackId" />
+    </Key>
+    <Property Name="TrackId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="200" />
+    <Property Name="AlbumId" Type="int" />
+    <Property Name="MediaTypeId" Type="int" Nullable="false" />
+    <Property Name="GenreId" Type="int" />
+    <Property Name="Composer" Type="nvarchar" MaxLength="220" />
+    <Property Name="Milliseconds" Type="int" Nullable="false" />
+    <Property Name="Bytes" Type="int" />
+    <Property Name="UnitPrice" Type="numeric" Nullable="false" Precision="10" Scale="2" />
+  </EntityType>
   <Association Name="FK_AlbumArtistId">
     <End Role="Artist" Type="ChinookModel.Store.Artist" Multiplicity="1" />
     <End Role="Album" Type="ChinookModel.Store.Album" Multiplicity="*" />
@@ -39,6 +58,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_TrackAlbumId">
+    <End Role="Album" Type="ChinookModel.Store.Album" Multiplicity="0..1" />
+    <End Role="Track" Type="ChinookModel.Store.Track" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Album">
+        <PropertyRef Name="AlbumId" />
+      </Principal>
+      <Dependent Role="Track">
+        <PropertyRef Name="AlbumId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>
 </edmx:StorageModels>
 <!-- CSDL content -->
@@ -47,9 +78,14 @@
   <EntityContainer Name="ChinookEntities" p1:LazyLoadingEnabled="true">
     <EntitySet Name="Album" EntityType="ChinookModel.Album" />
     <EntitySet Name="Artist" EntityType="ChinookModel.Artist" />
+    <EntitySet Name="Track" EntityType="ChinookModel.Track" />
     <AssociationSet Name="FK_AlbumArtistId" Association="ChinookModel.FK_AlbumArtistId">
       <End Role="Artist" EntitySet="Artist" />
       <End Role="Album" EntitySet="Album" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TrackAlbumId" Association="ChinookModel.FK_TrackAlbumId">
+      <End Role="Album" EntitySet="Album" />
+      <End Role="Track" EntitySet="Track" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="Album">
@@ -60,6 +96,7 @@
     <Property Name="Title" Type="String" Nullable="false" MaxLength="160" Unicode="true" FixedLength="false" />
     <Property Name="ArtistId" Type="Int32" Nullable="false" />
     <NavigationProperty Name="Artist" Relationship="ChinookModel.FK_AlbumArtistId" FromRole="Album" ToRole="Artist" />
+    <NavigationProperty Name="Track" Relationship="ChinookModel.FK_TrackAlbumId" FromRole="Album" ToRole="Track" />
   </EntityType>
   <EntityType Name="Artist">
     <Key>
@@ -68,6 +105,21 @@
     <Property Name="ArtistId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
     <Property Name="Name" Type="String" MaxLength="120" Unicode="true" FixedLength="false" />
     <NavigationProperty Name="Album" Relationship="ChinookModel.FK_AlbumArtistId" FromRole="Artist" ToRole="Album" />
+  </EntityType>
+  <EntityType Name="Track">
+    <Key>
+      <PropertyRef Name="TrackId" />
+    </Key>
+    <Property Name="TrackId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="200" Unicode="true" FixedLength="false" />
+    <Property Name="AlbumId" Type="Int32" />
+    <Property Name="MediaTypeId" Type="Int32" Nullable="false" />
+    <Property Name="GenreId" Type="Int32" />
+    <Property Name="Composer" Type="String" MaxLength="220" Unicode="true" FixedLength="false" />
+    <Property Name="Milliseconds" Type="Int32" Nullable="false" />
+    <Property Name="Bytes" Type="Int32" />
+    <Property Name="UnitPrice" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
+    <NavigationProperty Name="Album" Relationship="ChinookModel.FK_TrackAlbumId" FromRole="Track" ToRole="Album" />
   </EntityType>
   <Association Name="FK_AlbumArtistId">
     <End Role="Artist" Type="ChinookModel.Artist" Multiplicity="1" />
@@ -78,6 +130,18 @@
       </Principal>
       <Dependent Role="Album">
         <PropertyRef Name="ArtistId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TrackAlbumId">
+    <End Role="Album" Type="ChinookModel.Album" Multiplicity="0..1" />
+    <End Role="Track" Type="ChinookModel.Track" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Album">
+        <PropertyRef Name="AlbumId" />
+      </Principal>
+      <Dependent Role="Track">
+        <PropertyRef Name="AlbumId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -104,6 +168,21 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Track">
+      <EntityTypeMapping TypeName="ChinookModel.Track">
+        <MappingFragment StoreEntitySet="Track">
+          <ScalarProperty Name="TrackId" ColumnName="TrackId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="AlbumId" ColumnName="AlbumId" />
+          <ScalarProperty Name="MediaTypeId" ColumnName="MediaTypeId" />
+          <ScalarProperty Name="GenreId" ColumnName="GenreId" />
+          <ScalarProperty Name="Composer" ColumnName="Composer" />
+          <ScalarProperty Name="Milliseconds" ColumnName="Milliseconds" />
+          <ScalarProperty Name="Bytes" ColumnName="Bytes" />
+          <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>
 </edmx:Mappings>
@@ -112,5 +191,13 @@
 <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
 <Connection><DesignerInfoPropertySet><DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" /></DesignerInfoPropertySet></Connection>
 <edmx:Options><DesignerInfoPropertySet><DesignerProperty Name="ValidateOnBuild" Value="True" /><DesignerProperty Name="EnablePluralization" Value="False" /><DesignerProperty Name="IncludeForeignKeysInModel" Value="True" /><DesignerProperty Name="UseLegacyProvider" Value="False" /><DesignerProperty Name="CodeGenerationStrategy" Value="None" /></DesignerInfoPropertySet></edmx:Options>
-<edmx:Diagrams />
+<edmx:Diagrams >
+      <Diagram DiagramId="4d55ed1c46704d36af6731d9bbad786c" Name="Diagram1">
+        <EntityTypeShape EntityType="ChinookModel.Album" Width="1.5" PointX="3" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ChinookModel.Artist" Width="1.5" PointX="0.75" PointY="1.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ChinookModel.Track" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <AssociationConnector Association="ChinookModel.FK_AlbumArtistId" ManuallyRouted="false" />
+        <AssociationConnector Association="ChinookModel.FK_TrackAlbumId" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
 </edmx:Designer></edmx:Edmx>

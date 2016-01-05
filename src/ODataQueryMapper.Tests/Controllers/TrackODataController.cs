@@ -10,21 +10,20 @@
     using System.Web.OData.Query;
     using System.Web.OData.Routing;
 
-    [ODataRoutePrefix("album")]
     [ValidateQuery(AllowedQueryOptions = AllowedQueryOptions.Filter | AllowedQueryOptions.Count | AllowedQueryOptions.OrderBy | AllowedQueryOptions.Skip | AllowedQueryOptions.Top, PageSize = 50)]
-    public class AlbumODataController : ODataController
+    public class TrackODataController : ODataController
     {
-        private readonly IAlbumFunctions albumFunctions;
+        private readonly ITrackFunctions trackFunctions;
 
-        public AlbumODataController(IAlbumFunctions albumFunctions)
+        public TrackODataController(ITrackFunctions trackFunctions)
         {
-            this.albumFunctions = albumFunctions;
+            this.trackFunctions = trackFunctions;
         }
 
-        [ODataRoute]
-        public async Task<IHttpActionResult> Get(ODataQueryOptions<DomainAlbum> query)
+        [ODataRoute("track")]
+        public async Task<IHttpActionResult> Get(ODataQueryOptions<DomainTrack> query)
         {
-            var result = await this.albumFunctions.GetAlbums(query);
+            var result = await this.trackFunctions.GetTracks(query);
 
             if (result != null && result.Any())
             {
@@ -32,6 +31,19 @@
             }
 
             return this.StatusCode(HttpStatusCode.NoContent);
+        }
+
+        [ODataRoute("track({id})")]
+        public async Task<IHttpActionResult> Get(int id)
+        {
+            var result = await this.trackFunctions.GetTrack(id);
+
+            if (result != null)
+            {
+                return this.Ok(result);
+            }
+
+            return this.StatusCode(HttpStatusCode.NotFound);
         }
     }
 }
