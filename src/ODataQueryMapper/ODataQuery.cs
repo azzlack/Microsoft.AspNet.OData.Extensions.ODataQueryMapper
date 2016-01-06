@@ -111,7 +111,7 @@
         public static IODataQuery<T> Create<T>(string query) where T : class
         {
             var modelBuilder = new ODataConventionModelBuilder();
-            modelBuilder.EntitySet<T>(typeof(T).Name);
+            ODataQueryMapper.Engine?.Configuration?.GetTypeConfiguration<T>(modelBuilder);
 
             var model = modelBuilder.GetEdmModel();
 
