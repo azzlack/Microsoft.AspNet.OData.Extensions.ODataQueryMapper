@@ -104,6 +104,14 @@
             return new MappingExpression<TSource, TDestination>(configurations, rules);
         }
 
+        /// <summary>Creates an entity set with the specified type.</summary>
+        /// <typeparam name="TSource">The source type.</typeparam>
+        /// <returns>The type configuration.</returns>
+        public ITypeConfiguration<TSource> Configure<TSource>() where TSource : class
+        {
+            return this.Configure<TSource>(typeof(TSource).Name);
+        }
+
         /// <summary>Creates an entity set with the specified type and name.</summary>
         /// <typeparam name="TSource">The source type.</typeparam>
         /// <param name="entitySetName">The entity name set.</param>

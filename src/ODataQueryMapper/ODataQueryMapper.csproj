@@ -100,6 +100,7 @@
     <Compile Include="Interfaces\IODataQueryMapper.cs" />
     <Compile Include="Interfaces\IODataQueryOptionsFactory.cs" />
     <Compile Include="Interfaces\ITypeConfiguration.cs" />
+    <Compile Include="Interfaces\ITypeConfigurationExpression.cs" />
     <Compile Include="Interfaces\ITypeConfigurator.cs" />
     <Compile Include="Interfaces\ITypeConverter.cs" />
     <Compile Include="MappingExpression.cs" />

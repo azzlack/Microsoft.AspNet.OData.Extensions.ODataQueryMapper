@@ -1,6 +1,6 @@
 ﻿namespace Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Interfaces
 {
-    public interface ITypeConfiguration<TSource> where TSource : class
+    public interface ITypeConfiguration<TSource> : ITypeConfigurationExpression<TSource> where TSource : class
     {
         /// <summary>Creates a map between the two types.</summary>
         /// <typeparam name="TDestination">The destination type.</typeparam>

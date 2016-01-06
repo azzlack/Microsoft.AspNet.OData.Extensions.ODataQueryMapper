@@ -14,6 +14,11 @@
             where TSource : class
             where TDestination : class;
 
+        /// <summary>Creates an entity set with the specified type.</summary>
+        /// <typeparam name="TSource">The source type.</typeparam>
+        /// <returns>The type configuration.</returns>
+        ITypeConfiguration<TSource> Configure<TSource>() where TSource : class;
+
         /// <summary>Creates an entity set with the specified type and name.</summary>
         /// <typeparam name="TSource">The source type.</typeparam>
         /// <param name="entitySetName">The entity name set.</param>
