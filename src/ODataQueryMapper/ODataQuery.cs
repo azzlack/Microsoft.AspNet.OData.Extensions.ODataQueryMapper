@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.AspNet.OData.Extensions.ODataQueryMapper
 {
     using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Interfaces;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
@@ -110,8 +111,24 @@
         /// <returns>An OData query.</returns>
         public static IODataQuery<T> Create<T>(string query) where T : class
         {
+            return Create<T>(query, ODataQueryMapper.Engine);
+        }
+
+        /// <summary>Creates a new OData query from the specified query string.</summary>
+        /// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
+        /// <typeparam name="T">The OData type.</typeparam>
+        /// <param name="query">The query string.</param>
+        /// <param name="mapper">The mapper.</param>
+        /// <returns>An OData query.</returns>
+        public static IODataQuery<T> Create<T>(string query, IODataQueryMapper mapper) where T : class
+        {
+            if (mapper == null)
+            {
+                throw new ArgumentNullException(nameof(mapper), "You must specify an instance of IODataQueryMapper");
+            }
+
             var modelBuilder = new ODataConventionModelBuilder();
-            ODataQueryMapper.Engine?.Configuration?.GetTypeConfiguration<T>(modelBuilder);
+            mapper.Configuration.GetTypeConfiguration<T>(modelBuilder);
 
             var model = modelBuilder.GetEdmModel();
 
@@ -129,6 +146,19 @@
         /// <param name="filter">The filter.</param>
         /// <returns>An OData query.</returns>
         public static IODataQuery<T> Create<T>(int top = 0, int skip = 0, string orderBy = "", string filter = "") where T : class
+        {
+            return Create<T>(ODataQueryMapper.Engine, top, skip, orderBy, filter);
+        }
+
+        /// <summary>Creates a new OData query from the specified parameters.</summary>
+        /// <typeparam name="T">Generic type parameter.</typeparam>
+        /// <param name="mapper">The mapper.</param>
+        /// <param name="top">The number of items to take.</param>
+        /// <param name="skip">The number of items to skip.</param>
+        /// <param name="orderBy">The properties to order by.</param>
+        /// <param name="filter">The filter.</param>
+        /// <returns>An OData query.</returns>
+        public static IODataQuery<T> Create<T>(IODataQueryMapper mapper, int top = 0, int skip = 0, string orderBy = "", string filter = "") where T : class
         {
             var query = new List<string>();
 
@@ -152,7 +182,7 @@
                 query.Add($"filter={filter}");
             }
 
-            return Create<T>(string.Join("&", query));
+            return Create<T>(string.Join("&", query), mapper);
         }
 
         /// <summary>Gets an empty OData query.</summary>
@@ -160,8 +190,22 @@
         /// <returns>An OData query.</returns>
         public static IODataQuery<T> Empty<T>() where T : class
         {
+            return Empty<T>(ODataQueryMapper.Engine);
+        }
+
+        /// <summary>Gets an empty OData query.</summary>
+        /// <typeparam name="T">The OData type.</typeparam>
+        /// <param name="mapper">The mapper.</param>
+        /// <returns>An OData query.</returns>
+        public static IODataQuery<T> Empty<T>(IODataQueryMapper mapper) where T : class
+        {
+            if (mapper == null)
+            {
+                throw new ArgumentNullException(nameof(mapper), "You must specify an instance of IODataQueryMapper");
+            }
+
             var modelBuilder = new ODataConventionModelBuilder();
-            modelBuilder.EntitySet<T>(typeof(T).Name);
+            mapper.Configuration.GetTypeConfiguration<T>(modelBuilder);
 
             var model = modelBuilder.GetEdmModel();
 
@@ -176,8 +220,23 @@
         /// <returns>An OData query.</returns>
         public static IODataQuery<T> Default<T>(HttpRequestMessage request) where T : class
         {
+            return Default<T>(request, ODataQueryMapper.Engine);
+        }
+
+        /// <summary>Gets a default OData query.</summary>
+        /// <typeparam name="T">The OData type.</typeparam>
+        /// <param name="request">The request.</param>
+        /// <param name="mapper">The mapper.</param>
+        /// <returns>An OData query.</returns>
+        public static IODataQuery<T> Default<T>(HttpRequestMessage request, IODataQueryMapper mapper) where T : class
+        {
+            if (mapper == null)
+            {
+                throw new ArgumentNullException(nameof(mapper), "You must specify an instance of IODataQueryMapper");
+            }
+
             var modelBuilder = new ODataConventionModelBuilder();
-            modelBuilder.EntitySet<T>(typeof(T).Name);
+            mapper.Configuration.GetTypeConfiguration<T>(modelBuilder);
 
             var model = modelBuilder.GetEdmModel();
 
