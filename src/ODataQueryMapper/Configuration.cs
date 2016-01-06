@@ -115,6 +115,20 @@
         /// <summary>Creates an entity set with the specified type and name.</summary>
         /// <typeparam name="TSource">The source type.</typeparam>
         /// <param name="entitySetName">The entity name set.</param>
+        /// <returns>The type configuration.</returns>
+        public ITypeConfiguration<TSource> Configure<TSource>(string entitySetName) where TSource : class
+        {
+            this.builder.EntitySet<TSource>(entitySetName);
+
+            var configurations = this.GetOrInsertTypeConfiguration(typeof(TSource).FullName);
+            var rules = this.GetOrInsertRuleSet(typeof(TSource).FullName);
+
+            return new TypeConfiguration<TSource>(this.builder.EntityType<TSource>(), configurations, rules);
+        }
+
+        /// <summary>Creates an entity set with the specified type and name.</summary>
+        /// <typeparam name="TSource">The source type.</typeparam>
+        /// <param name="entitySetName">The entity name set.</param>
         /// <param name="configurationExpression">The configuration expression.</param>
         /// <returns>The type configuration.</returns>
         public ITypeConfiguration<TSource> Configure<TSource>(string entitySetName, Action<EntityTypeConfiguration<TSource>> configurationExpression) where TSource : class
@@ -125,20 +139,6 @@
             var rules = this.GetOrInsertRuleSet(typeof(TSource).FullName);
 
             configurationExpression(this.builder.EntityType<TSource>());
-
-            return new TypeConfiguration<TSource>(this.builder.EntityType<TSource>(), configurations, rules);
-        }
-
-        /// <summary>Creates an entity set with the specified type and name.</summary>
-        /// <typeparam name="TSource">The source type.</typeparam>
-        /// <param name="entitySetName">The entity name set.</param>
-        /// <returns>The type configuration.</returns>
-        public ITypeConfiguration<TSource> Configure<TSource>(string entitySetName) where TSource : class
-        {
-            this.builder.EntitySet<TSource>(entitySetName);
-
-            var configurations = this.GetOrInsertTypeConfiguration(typeof(TSource).FullName);
-            var rules = this.GetOrInsertRuleSet(typeof(TSource).FullName);
 
             return new TypeConfiguration<TSource>(this.builder.EntityType<TSource>(), configurations, rules);
         }

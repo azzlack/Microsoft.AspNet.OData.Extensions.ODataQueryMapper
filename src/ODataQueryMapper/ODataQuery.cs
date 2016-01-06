@@ -6,7 +6,6 @@
     using System.Linq;
     using System.Net.Http;
     using System.Web.OData;
-    using System.Web.OData.Builder;
     using System.Web.OData.Extensions;
     using System.Web.OData.Query;
     using System.Web.OData.Routing;
@@ -127,10 +126,7 @@
                 throw new ArgumentNullException(nameof(mapper), "You must specify an instance of IODataQueryMapper");
             }
 
-            var modelBuilder = new ODataConventionModelBuilder();
-            mapper.Configuration.GetTypeConfiguration<T>(modelBuilder);
-
-            var model = modelBuilder.GetEdmModel();
+            var model = mapper.GetModel();
 
             var request = new HttpRequestMessage(HttpMethod.Get, $"http://localhost/{typeof(T).Name}?{query}");
             var context = new ODataQueryContext(model, typeof(T), new ODataPath());
@@ -204,10 +200,7 @@
                 throw new ArgumentNullException(nameof(mapper), "You must specify an instance of IODataQueryMapper");
             }
 
-            var modelBuilder = new ODataConventionModelBuilder();
-            mapper.Configuration.GetTypeConfiguration<T>(modelBuilder);
-
-            var model = modelBuilder.GetEdmModel();
+            var model = mapper.GetModel();
 
             var request = new HttpRequestMessage(HttpMethod.Get, $"http://localhost/{typeof(T).Name}");
             var context = new ODataQueryContext(model, typeof(T), new ODataPath());
@@ -235,10 +228,7 @@
                 throw new ArgumentNullException(nameof(mapper), "You must specify an instance of IODataQueryMapper");
             }
 
-            var modelBuilder = new ODataConventionModelBuilder();
-            mapper.Configuration.GetTypeConfiguration<T>(modelBuilder);
-
-            var model = modelBuilder.GetEdmModel();
+            var model = mapper.GetModel();
 
             var context = new ODataQueryContext(model, typeof(T), new ODataPath());
 
