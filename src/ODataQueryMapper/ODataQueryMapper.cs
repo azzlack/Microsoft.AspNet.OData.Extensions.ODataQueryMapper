@@ -18,6 +18,9 @@
         /// <summary>The odata query options factory.</summary>
         private readonly IODataQueryOptionsFactory odataDataQueryOptionsFactory;
 
+        /// <summary>The configuration.</summary>
+        private IConfiguration configuration;
+
         /// <summary>Initializes a new instance of the <see cref="ODataQueryMapper" /> class.</summary>
         /// <param name="odataDataQueryOptionsFactory">The odata query options factory.</param>
         internal ODataQueryMapper(IODataQueryOptionsFactory odataDataQueryOptionsFactory)
@@ -27,7 +30,23 @@
 
         /// <summary>Gets the configuration.</summary>
         /// <value>The configuration.</value>
-        public IConfiguration Configuration { get; private set; }
+        public IConfiguration Configuration
+        {
+            get
+            {
+                if (this.configuration == null)
+                {
+                    throw new InvalidOperationException("The Engine has not been initialized. Please run Initialize() before trying to retrieve the configuration.");
+                }
+
+                return this.configuration;
+            }
+
+            set
+            {
+                this.configuration = value;
+            }
+        }
 
         /// <summary>The engine.</summary>
         public static IODataQueryMapper Engine => Singleton.Value;
