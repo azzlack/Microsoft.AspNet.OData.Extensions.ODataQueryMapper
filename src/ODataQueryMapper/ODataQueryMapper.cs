@@ -95,7 +95,7 @@
 
             if (orderBy != null)
             {
-                clauses.Add("$orderBy", orderBy.ToString());
+                clauses.Add("$orderby", orderBy.ToString());
             }
 
             if (filter != null)

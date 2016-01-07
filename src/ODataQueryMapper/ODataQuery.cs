@@ -1,5 +1,6 @@
 ﻿namespace Microsoft.AspNet.OData.Extensions.ODataQueryMapper
 {
+    using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Extensions;
     using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Interfaces;
     using System;
     using System.Collections.Generic;
@@ -81,6 +82,13 @@
             var result = base.ApplyTo(collection, querySettings) as IQueryable<T>;
 
             return new ODataQueryable<T>(result, result.Count());
+        }
+
+        /// <summary>Returns a string that represents the current object.</summary>
+        /// <returns>A string that represents the current object.</returns>
+        public override string ToString()
+        {
+            return this.Options.ToODataUriString();
         }
 
         private IODataQueryable<T> LimitResults(IQueryable<T> collection, int total, int limit, out int resultsRemoved)

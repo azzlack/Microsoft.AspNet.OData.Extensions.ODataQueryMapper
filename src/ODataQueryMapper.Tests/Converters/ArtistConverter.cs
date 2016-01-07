@@ -12,7 +12,8 @@
         {
             return new Dictionary<string, string>()
                        {
-                           { "Id", "ArtistId" }
+                           { "Id", "ArtistId" },
+                           { "DisplayName", "Name" }
                        };
         }
     }

@@ -8,6 +8,8 @@
 
         public string Name { get; set; }
 
+        public string DisplayName { get; set; }
+
         public IEnumerable<DomainAlbum> Albums { get; set; }
     }
 }

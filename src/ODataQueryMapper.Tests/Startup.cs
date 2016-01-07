@@ -49,6 +49,7 @@
                        .ForMember(m => m.Artist, y => y.MapFrom(z => new Resource<long>() { Value = z.Artist.ArtistId, Title = z.Artist.Name, Link = $"/api/artist/{z.Artist.ArtistId}" }));
                    x.CreateMap<Artist, DomainArtist>()
                        .ForMember(m => m.Id, y => y.MapFrom(z => z.ArtistId))
+                       .ForMember(m => m.DisplayName, y => y.MapFrom(z => z.Name))
                        .ForMember(m => m.Albums, y => y.Ignore());
                    x.CreateMap<Track, DomainTrack>()
                        .ForMember(m => m.Wbs, y => y.MapFrom(z => z.TrackId))

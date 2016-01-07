@@ -30,6 +30,7 @@
         [TestCase("$top=10&$count=true")]
         [TestCase("$top=10")]
         [TestCase("$top=50&$skip=50")]
+        [TestCase("$filter=contains(tolower(Title), 'rock')&$orderby=Title")]
         public async Task GetAlbums_WhenGivenSimpleODataQuery_ReturnsAlbums(string query)
         {
             var response = await this.server.HttpClient.GetAsync($"odata/album?{query}");
@@ -85,6 +86,7 @@
         [TestCase("$top=10&$count=true")]
         [TestCase("$top=10")]
         [TestCase("$top=50&$skip=50")]
+        [TestCase("$filter=contains(tolower(DisplayName), 'roses')&$orderby=DisplayName")]
         public async Task GetArtists_WhenGivenSimpleODataQuery_ReturnsArtists(string query)
         {
             var response = await this.server.HttpClient.GetAsync($"odata/artist?{query}");
