@@ -34,6 +34,17 @@
 
             var querySettings = this.Request.ODataQuerySettings();
 
+            return this.ApplyTo(collection, querySettings);
+        }
+
+        /// <summary>Applies to described by query.</summary>
+        /// <param name="collection">The collection.</param>
+        /// <param name="querySettings">The query settings.</param>
+        /// <returns>The processed collection.</returns>
+        public IODataQueryable<T> ApplyTo(IQueryable<T> collection, ODataQuerySettings querySettings)
+        {
+            this.ValidateQuery();
+
             if (querySettings != null)
             {
                 var total = collection.Count();
@@ -67,19 +78,6 @@
             }
 
             var result = base.ApplyTo(collection) as IQueryable<T>;
-
-            return new ODataQueryable<T>(result, result.Count());
-        }
-
-        /// <summary>Applies to described by query.</summary>
-        /// <param name="collection">The collection.</param>
-        /// <param name="querySettings">The query settings.</param>
-        /// <returns>The processed collection.</returns>
-        public IODataQueryable<T> ApplyTo(IQueryable<T> collection, ODataQuerySettings querySettings)
-        {
-            this.ValidateQuery();
-
-            var result = base.ApplyTo(collection, querySettings) as IQueryable<T>;
 
             return new ODataQueryable<T>(result, result.Count());
         }
