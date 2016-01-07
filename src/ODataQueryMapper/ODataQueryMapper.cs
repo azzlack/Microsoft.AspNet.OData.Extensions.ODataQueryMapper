@@ -134,11 +134,6 @@
         /// <returns>The data model.</returns>
         public IEdmModel CreateModel<T>() where T : class
         {
-            if (!this.Configuration.Sealed)
-            {
-                throw new InvalidOperationException("The configuration must be verified before the data model can be retrieved.");
-            }
-
             return ((Configuration)this.Configuration).GetModel<T>();
         }
 
