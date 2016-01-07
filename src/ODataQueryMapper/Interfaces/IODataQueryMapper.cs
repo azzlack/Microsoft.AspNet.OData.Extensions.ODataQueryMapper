@@ -19,8 +19,13 @@
             where TSource : class
             where TDestination : class;
 
-        /// <summary>Gets the data model.</summary>
+        /// <summary>Creates a new version of the data model, containing the specified entity.</summary>
+        /// <typeparam name="T">The entity type.</typeparam>
         /// <returns>The data model.</returns>
+        IEdmModel CreateModel<T>() where T : class;
+
+        /// <summary>Gets the model.</summary>
+        /// <returns>The model.</returns>
         IEdmModel GetModel();
     }
 }

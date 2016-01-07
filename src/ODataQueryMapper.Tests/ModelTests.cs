@@ -1,5 +1,6 @@
 ﻿namespace Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Tests
 {
+    using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Tests.Profiles;
     using NUnit.Framework;
     using System.Collections.Generic;
     using System.Linq;
@@ -9,6 +10,16 @@
     [TestFixture]
     public class ModelTests
     {
+        [SetUp]
+        public void SetUp()
+        {
+            ODataQueryMapper.Initialize(
+                x =>
+                    {
+                        x.AddProfile<TestProfile>();
+                    });
+        }
+
         [Test]
         public void CreateODataQuery_WhenGivenValidQueryString_ReturnsQuery()
         {

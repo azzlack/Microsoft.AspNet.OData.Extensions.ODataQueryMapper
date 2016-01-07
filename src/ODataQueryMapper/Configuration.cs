@@ -11,80 +11,52 @@
 
     public class Configuration : IConfiguration
     {
-        /// <summary>The edm builder.</summary>
-        private readonly ODataModelBuilder builder;
-
         /// <summary>The type configurations.</summary>
         private readonly Dictionary<string, Collection<LambdaExpression>> typeConfigurations;
 
         /// <summary>The rules.</summary>
         private readonly Dictionary<string, Dictionary<string, string>> ruleSets;
 
+        /// <summary>The model builder.</summary>
+        private readonly ODataConventionModelBuilder builder;
+
+        /// <summary>The model.</summary>
+        private IEdmModel model;
+
         /// <summary>Initializes a new instance of the <see cref="Configuration" /> class.</summary>
-        internal Configuration()
+        /// <param name="initializationExpression">The initialization expression.</param>
+        internal Configuration(Action<IConfiguration> initializationExpression)
         {
             this.builder = new ODataConventionModelBuilder();
 
             this.typeConfigurations = new Dictionary<string, Collection<LambdaExpression>>();
             this.ruleSets = new Dictionary<string, Dictionary<string, string>>();
+
+            this.InitializationExpression = initializationExpression;
+            initializationExpression(this);
         }
 
         /// <summary>Gets a value indicating whether the sealed.</summary>
         /// <value>true if sealed, false if not.</value>
         public bool Sealed { get; private set; }
 
-        /// <summary>Gets the data model.</summary>
-        /// <value>The data model.</value>
-        public IEdmModel Model { get; private set; }
+        /// <summary>Gets the initialization expression.</summary>
+        /// <value>The initialization expression.</value>
+        public Action<IConfiguration> InitializationExpression { get; }
 
-        /// <summary>Verifies this configuration.</summary>
-        public void Verify()
+        /// <summary>Gets the model.</summary>
+        /// <value>The model.</value>
+        public IEdmModel Model
         {
-            // TODO: Verify settings
-            this.Sealed = true;
-
-            this.Model = this.builder.GetEdmModel();
-        }
-
-        /// <summary>Gets the transformation rules for the specified type.</summary>
-        /// <typeparam name="TSource">Type of the source.</typeparam>
-        /// <returns>The transformation rules.</returns>
-        public Dictionary<string, string> GetMap<TSource>()
-        {
-            if (this.ruleSets.ContainsKey(typeof(TSource).FullName))
+            get
             {
-                return this.ruleSets[typeof(TSource).FullName].OrderByDescending(x => x.Key.Length).ToDictionary(x => x.Key, x => x.Value);
-            }
-
-            return new Dictionary<string, string>();
-        }
-
-        /// <summary>Gets the type configuration.</summary>
-        /// <typeparam name="T">The type.</typeparam>
-        /// <param name="modelBuilder">The model builder.</param>
-        /// <returns>The type configuration.</returns>
-        public EntityTypeConfiguration<T> GetTypeConfiguration<T>(ODataConventionModelBuilder modelBuilder) where T : class
-        {
-            modelBuilder.EntitySet<T>(typeof(T).Name);
-
-            var config = modelBuilder.EntityType<T>();
-
-            if (this.typeConfigurations.ContainsKey(typeof(T).FullName))
-            {
-                var configurationExpressions = this.typeConfigurations[typeof(T).FullName];
-
-                foreach (var configurationExpression in configurationExpressions)
+                if (!this.Sealed)
                 {
-                    var exp = configurationExpression.Compile() as Action<EntityTypeConfiguration<T>>;
-
-                    if (exp != null)
-                    {
-                        exp(config);
-                    }
+                    throw new InvalidOperationException("The model must be verified before usage. Please run Verify() before trying to get the model.");
                 }
-            }
 
-            return config;
+                return this.model ?? (this.model = this.builder.GetEdmModel());
+            }
         }
 
         /// <summary>Creates a map between the two types.</summary>
@@ -96,6 +68,11 @@
             where TSource : class
             where TDestination : class
         {
+            if (this.Sealed)
+            {
+                throw new InvalidOperationException("The model is sealed. It cannot be modified outside of the Initialize function.");
+            }
+
             this.builder.EntitySet<TSource>(entitySetName);
 
             var configurations = this.GetOrInsertTypeConfiguration(typeof(TDestination).FullName);
@@ -109,6 +86,11 @@
         /// <returns>The type configuration.</returns>
         public ITypeConfiguration<TSource> Configure<TSource>() where TSource : class
         {
+            if (this.Sealed)
+            {
+                throw new InvalidOperationException("The model is sealed. It cannot be modified outside of the Initialize function.");
+            }
+
             return this.Configure<TSource>(typeof(TSource).Name);
         }
 
@@ -133,6 +115,11 @@
         /// <returns>The type configuration.</returns>
         public ITypeConfiguration<TSource> Configure<TSource>(string entitySetName, Action<EntityTypeConfiguration<TSource>> configurationExpression) where TSource : class
         {
+            if (this.Sealed)
+            {
+                throw new InvalidOperationException("The model is sealed. It cannot be modified outside of the Initialize function.");
+            }
+
             this.builder.EntitySet<TSource>(entitySetName);
 
             var configurations = this.GetOrInsertTypeConfiguration(typeof(TSource).FullName);
@@ -147,9 +134,69 @@
         /// <typeparam name="T">Generic type parameter.</typeparam>
         public void AddProfile<T>() where T : IMappingProfile
         {
+            if (this.Sealed)
+            {
+                throw new InvalidOperationException("The model is sealed. It cannot be modified outside of the Initialize function.");
+            }
+
             var profile = Activator.CreateInstance<T>();
 
             profile.Configure(this);
+        }
+
+        /// <summary>Verifies this configuration.</summary>
+        internal void Verify()
+        {
+            // TODO: Verify settings
+            this.Sealed = true;
+        }
+
+        /// <summary>Gets the transformation rules for the specified type.</summary>
+        /// <typeparam name="TSource">Type of the source.</typeparam>
+        /// <returns>The transformation rules.</returns>
+        internal Dictionary<string, string> GetMap<TSource>()
+        {
+            if (this.ruleSets.ContainsKey(typeof(TSource).FullName))
+            {
+                return this.ruleSets[typeof(TSource).FullName].OrderByDescending(x => x.Key.Length).ToDictionary(x => x.Key, x => x.Value);
+            }
+
+            return new Dictionary<string, string>();
+        }
+
+        /// <summary>Gets the entity model.</summary>
+        /// <typeparam name="T">The entity type.</typeparam>
+        /// <returns>The entity model.</returns>
+        internal IEdmModel GetModel<T>() where T : class
+        {
+            if (!this.Sealed)
+            {
+                throw new InvalidOperationException("The model must be verified before usage. Please run Verify() before trying to get the model.");
+            }
+
+            var configuration = new Configuration(this.InitializationExpression);
+            configuration.builder.EntitySet<T>(typeof(T).Name);
+
+            var typeConfiguration = configuration.builder.EntityType<T>();
+
+            if (configuration.typeConfigurations.ContainsKey(typeof(T).FullName))
+            {
+                var configurationExpressions = configuration.typeConfigurations[typeof(T).FullName];
+
+                foreach (var configurationExpression in configurationExpressions)
+                {
+                    var exp = configurationExpression.Compile() as Action<EntityTypeConfiguration<T>>;
+
+                    if (exp != null)
+                    {
+                        exp(typeConfiguration);
+                    }
+                }
+            }
+
+            configuration.Verify();
+
+            return configuration.Model;
         }
 
         /// <summary>Gets or inserts a type configuration.</summary>

@@ -126,7 +126,7 @@
                 throw new ArgumentNullException(nameof(mapper), "You must specify an instance of IODataQueryMapper");
             }
 
-            var model = mapper.GetModel();
+            var model = mapper.CreateModel<T>();
 
             var request = new HttpRequestMessage(HttpMethod.Get, $"http://localhost/{typeof(T).Name}?{query}");
             var context = new ODataQueryContext(model, typeof(T), new ODataPath());
@@ -200,7 +200,7 @@
                 throw new ArgumentNullException(nameof(mapper), "You must specify an instance of IODataQueryMapper");
             }
 
-            var model = mapper.GetModel();
+            var model = mapper.CreateModel<T>();
 
             var request = new HttpRequestMessage(HttpMethod.Get, $"http://localhost/{typeof(T).Name}");
             var context = new ODataQueryContext(model, typeof(T), new ODataPath());
@@ -228,7 +228,7 @@
                 throw new ArgumentNullException(nameof(mapper), "You must specify an instance of IODataQueryMapper");
             }
 
-            var model = mapper.GetModel();
+            var model = mapper.CreateModel<T>();
 
             var context = new ODataQueryContext(model, typeof(T), new ODataPath());
 

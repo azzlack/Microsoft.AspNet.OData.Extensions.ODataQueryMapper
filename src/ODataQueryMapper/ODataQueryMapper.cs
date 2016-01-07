@@ -6,7 +6,6 @@
     using System.Collections.Generic;
     using System.Text;
     using System.Web.OData;
-    using System.Web.OData.Builder;
     using System.Web.OData.Query;
 
     /// <summary>An OData query mapper.</summary>
@@ -59,9 +58,8 @@
         /// <returns>An OData query mapper.</returns>
         public static void Initialize(Action<IConfiguration> action)
         {
-            ((ODataQueryMapper)Engine).Reset();
-            action(Engine.Configuration);
-            Engine.Configuration.Verify();
+            ((ODataQueryMapper)Engine).Setup(action);
+            ((Configuration)Engine.Configuration).Verify();
         }
 
         /// <summary>Maps the specified query to the other type.</summary>
@@ -74,7 +72,7 @@
             where TDestination : class
         {
             // 1. Get map
-            var map = this.Configuration.GetMap<TSource>();
+            var map = ((Configuration)this.Configuration).GetMap<TSource>();
 
             // 2. Transform clauses
             StringBuilder orderBy = null;
@@ -91,12 +89,7 @@
                 this.BulkReplace(filter, map);
             }
 
-            // 3. Create new ODataQueryOptions for TDestination
-            var modelBuilder = new ODataConventionModelBuilder();
-            this.Configuration.GetTypeConfiguration<TDestination>(modelBuilder);
-
-            // 5. Generate model and clauses
-            var model = modelBuilder.GetEdmModel();
+            var model = ((Configuration)this.Configuration).GetModel<TDestination>();
 
             var clauses = new Dictionary<string, string>();
 
@@ -136,30 +129,36 @@
             return this.odataDataQueryOptionsFactory.Create<TDestination>(clauses, context, query.Request);
         }
 
-        /// <summary>Gets the data model.</summary>
+        /// <summary>Creates a new version of the data model, containing the specified entity.</summary>
+        /// <typeparam name="T">The entity type.</typeparam>
         /// <returns>The data model.</returns>
-        public IEdmModel GetModel()
+        public IEdmModel CreateModel<T>() where T : class
         {
             if (!this.Configuration.Sealed)
             {
                 throw new InvalidOperationException("The configuration must be verified before the data model can be retrieved.");
             }
 
+            return ((Configuration)this.Configuration).GetModel<T>();
+        }
+
+        /// <summary>Gets the model.</summary>
+        /// <returns>The model.</returns>
+        public IEdmModel GetModel()
+        {
             return this.Configuration.Model;
         }
 
-        /// <summary>Resets this object.</summary>
-        internal void Reset()
+        /// <summary>Initializes this object.</summary>
+        /// <param name="initializeExpression">The initialization expression.</param>
+        internal void Setup(Action<IConfiguration> initializeExpression)
         {
-            this.Configuration = new Configuration();
+            this.Configuration = new Configuration(initializeExpression);
         }
 
-        /// <summary>
-        /// Replaces the source content according to the replacement map.
-        /// </summary>
+        /// <summary>Replaces the source content according to the replacement map.</summary>
         /// <param name="source">The source.</param>
         /// <param name="replacementMap">The replacement map.</param>
-        /// <returns>The transformed content.</returns>
         private void BulkReplace(StringBuilder source, IDictionary<string, string> replacementMap)
         {
             if (source.Length == 0 || replacementMap.Count == 0)
