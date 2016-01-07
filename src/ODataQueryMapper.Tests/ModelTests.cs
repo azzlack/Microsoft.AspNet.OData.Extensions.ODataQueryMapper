@@ -1,8 +1,10 @@
 ﻿namespace Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Tests
 {
+    using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Extensions;
     using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Tests.Models;
     using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Tests.Profiles;
     using NUnit.Framework;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
@@ -108,6 +110,40 @@
             Assert.AreEqual(2, p.Count);
             Assert.IsNotNull(p.NextLink);
             Assert.AreEqual(1, p.Count());
+        }
+
+        [Test]
+        public void IsEmpty_WhenGivenEmptyQuery_ReturnsTrue()
+        {
+            var q = ODataQuery.Create<Album>("").Options.IsEmpty();
+
+            Assert.IsTrue(q);
+        }
+
+        [TestCase("$top=1")]
+        [TestCase("$skip=1")]
+        [TestCase("$count=true")]
+        [TestCase("$filter=test")]
+        [TestCase("$orderby=true")]
+        public void IsEmpty_WhenGivenNonEmptyQuery_ReturnsFalse(string query)
+        {
+            var q = ODataQuery.Create<Album>(query).Options.IsEmpty();
+
+            Assert.IsFalse(q);
+        }
+
+        [TestCase("$top=1")]
+        [TestCase("$skip=10&$top=10")]
+        [TestCase("$count=true")]
+        [TestCase("$filter=test eq 'old'")]
+        public void ToODataUriString_WhenGivenODataQuery_ReturnsQuery(string query)
+        {
+            var q = ODataQuery.Create<Album>(query).Options.ToODataUriString();
+
+            Console.WriteLine("Query1: " + query);
+            Console.WriteLine("Query2: " + q);
+
+            Assert.AreEqual(query, q);
         }
     }
 }

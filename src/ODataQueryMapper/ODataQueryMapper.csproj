@@ -89,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration.cs" />
+    <Compile Include="Extensions\ODataQueryOptionsExtensions.cs" />
     <Compile Include="HttpRequestMessageExtensions.cs" />
     <Compile Include="Interfaces\IODataCollection.cs" />
     <Compile Include="Interfaces\IODataQueryable.cs" />
