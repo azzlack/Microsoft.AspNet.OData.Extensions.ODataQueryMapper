@@ -12,8 +12,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A query mapper for OData v4.0, Automapper style. 
 	
-This extension allows you to have a different domain model than your database model, and still be able to pass the OData query down to the database..</description>
-    <summary>A query mapper for OData v4.0, Automapper style. </summary>
+This extension allows you to have a different domain model than your database model, and still be able to pass the OData query down to the database.</description>
+    <summary>A query mapper for OData v4.0, Automapper style.</summary>
 	<releaseNotes></releaseNotes>
     <copyright>Copyright EyeCatch 2015</copyright>
     <language>en-US</language>
@@ -22,6 +22,9 @@ This extension allows you to have a different domain model than your database mo
 	  <dependency id="Microsoft.AspNet.OData" version="5.7.0" />
     </dependencies> 
   </metadata>
+  <references>
+    <reference file="Microsoft.AspNet.OData.Extensions.ODataQueryMapper.dll" />
+  </references>
   <files>
 	<file src="..\..\src\ODataQueryMapper\bin\Release\Microsoft.AspNet.OData.Extensions.ODataQueryMapper.dll" target="net45" />
 	<file src="..\..\src\ODataQueryMapper\bin\Release\Microsoft.AspNet.OData.Extensions.ODataQueryMapper.pdb" target="net45" />
