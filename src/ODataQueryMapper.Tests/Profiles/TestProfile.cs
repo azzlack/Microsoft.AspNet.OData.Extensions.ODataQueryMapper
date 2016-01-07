@@ -15,6 +15,8 @@
 
             configuration.Configure<DomainTrack>("track").ConfigureUsing<TrackConfigurator>(); // TODO: ITypeConfigurator must be able to map stuff
             configuration.Configure<DomainTrack>("track").CreateMap<Track>().ConvertUsing<TrackConverter>();
+
+            configuration.Configure<Track>("Track", x => x.HasKey(y => y.TrackId));
         }
     }
 }

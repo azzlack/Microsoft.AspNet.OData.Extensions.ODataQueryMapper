@@ -175,7 +175,11 @@
             }
 
             var configuration = new Configuration(this.InitializationExpression);
-            configuration.builder.EntitySet<T>(typeof(T).Name);
+
+            if (configuration.builder.EntitySets.All(x => x.ClrType != typeof(T)))
+            {
+                configuration.builder.EntitySet<T>(typeof(T).Name);
+            }
 
             var typeConfiguration = configuration.builder.EntityType<T>();
 

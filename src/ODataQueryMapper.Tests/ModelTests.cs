@@ -1,5 +1,6 @@
 ﻿namespace Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Tests
 {
+    using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Tests.Models;
     using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Tests.Profiles;
     using NUnit.Framework;
     using System.Collections.Generic;
@@ -15,9 +16,13 @@
         {
             ODataQueryMapper.Initialize(
                 x =>
-                    {
-                        x.AddProfile<TestProfile>();
-                    });
+                {
+                    x.CreateMap<DomainAlbum, Album>("album")
+                        .ForDestinationEntity(y => y.HasKey(z => z.AlbumId))
+                        .ForMember(y => y.Id, y => y.AlbumId);
+
+                    x.AddProfile<TestProfile>();
+                });
         }
 
         [Test]
@@ -29,7 +34,7 @@
         }
 
         [Test]
-        public void ApplyODataQuery_WhenGivenValidQueryString_ReturnsFilteredCollection()
+        public void ApplyODataQuery_WhenGivenValidAlbumQueryString_ReturnsFilteredCollection()
         {
             var c = new List<Album>()
                         {
@@ -37,6 +42,21 @@
                             new Album() { AlbumId = 2 }
                         }.AsQueryable();
             var q = ODataQuery.Create<Album>("$filter=AlbumId eq 1");
+
+            var p = q.ApplyTo(c);
+
+            Assert.AreEqual(1, p.Count());
+        }
+
+        [Test]
+        public void ApplyODataQuery_WhenGivenValidTrackQueryString_ReturnsFilteredCollection()
+        {
+            var c = new List<Track>()
+                        {
+                            new Track() { TrackId = 1 },
+                            new Track() { TrackId = 2 }
+                        }.AsQueryable();
+            var q = ODataQuery.Create<Track>("$filter=TrackId eq 1");
 
             var p = q.ApplyTo(c);
 
