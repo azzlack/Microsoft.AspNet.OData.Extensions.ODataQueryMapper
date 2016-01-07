@@ -11,7 +11,15 @@
     public class ODataQueryable<T> : IODataQueryable<T>
     {
         /// <summary>The values.</summary>
-        private readonly IQueryable<T> values;
+        private IQueryable<T> values;
+
+        /// <summary>Initializes a new instance of the &lt;see cref="ODataQueryable&lt;T&gt;" /&gt; class.</summary>
+        public ODataQueryable()
+        {
+            this.values = Enumerable.Empty<T>().AsQueryable();
+
+            this.Count = 0;
+        }
 
         /// <summary>Initializes a new instance of the &lt;see cref="IODataQueryable&lt;T&gt;" /&gt; interface.</summary>
         /// <param name="values">The values.</param>
@@ -33,7 +41,18 @@
 
         /// <summary>Gets or sets the data.</summary>
         /// <value>The data.</value>
-        public IEnumerable<T> Value => this.values;
+        public IEnumerable<T> Value
+        {
+            get
+            {
+                return this.values;
+            }
+
+            set
+            {
+                this.values = value?.AsQueryable();
+            }
+        }
 
         /// <summary>Converts this object to a list asynchronously.</summary>
         /// <typeparam name="T">Generic type parameter.</typeparam>
