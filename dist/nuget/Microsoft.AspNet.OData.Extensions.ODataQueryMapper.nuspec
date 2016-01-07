@@ -21,15 +21,10 @@ This extension allows you to have a different domain model than your database mo
     <dependencies>
 	  <dependency id="Microsoft.AspNet.OData" version="5.7.0" />
     </dependencies> 
-    <references>
-	  <group targetFramework="net45"> 
-		<reference file="Microsoft.AspNet.OData.Extensions.ODataQueryMapper.dll" />
-	  </group> 
-    </references>
   </metadata>
   <files>
-	<file src="..\..\src\ODataQueryMapper\bin\Release\Microsoft.AspNet.OData.Extensions.ODataQueryMapper.dll" target="net45" />
-	<file src="..\..\src\ODataQueryMapper\bin\Release\Microsoft.AspNet.OData.Extensions.ODataQueryMapper.pdb" target="net45" />
+	<file src="..\..\src\ODataQueryMapper\bin\Release\Microsoft.AspNet.OData.Extensions.ODataQueryMapper.dll" target="lib\net45" />
+	<file src="..\..\src\ODataQueryMapper\bin\Release\Microsoft.AspNet.OData.Extensions.ODataQueryMapper.pdb" target="lib\net45" />
 	<file src="..\..\src\ODataQueryMapper\**\*.cs" exclude="**\obj\**\*.*" target="src" />
   </files>
 </package>
