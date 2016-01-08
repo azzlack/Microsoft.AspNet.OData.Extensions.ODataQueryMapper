@@ -111,6 +111,8 @@
     <Compile Include="ODataQueryMapper.cs" />
     <Compile Include="ODataQueryOptionsFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serializers\ODataCollectionSerializer.cs" />
+    <Compile Include="Serializers\ODataQueryableSerializer.cs" />
     <Compile Include="TypeConfiguration.cs" />
     <Compile Include="ValidateQueryAttribute.cs" />
   </ItemGroup>

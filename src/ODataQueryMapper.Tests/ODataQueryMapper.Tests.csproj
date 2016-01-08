@@ -246,6 +246,7 @@
     <Compile Include="Interfaces\ITrackRepository.cs" />
     <Compile Include="Interfaces\ITrackFunctions.cs" />
     <Compile Include="Models\DomainTrack.cs" />
+    <Compile Include="SerializerTests.cs" />
     <Compile Include="ModelTests.cs" />
     <Compile Include="ODataTests.cs" />
     <Compile Include="Controllers\ArtistApiController.cs" />

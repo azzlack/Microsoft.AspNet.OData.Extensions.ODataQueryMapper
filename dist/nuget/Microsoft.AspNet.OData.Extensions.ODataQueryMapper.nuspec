@@ -20,6 +20,7 @@ This extension allows you to have a different domain model than your database mo
     <tags>odata webapi transform mapper mapping eyecatch</tags>
     <dependencies>
 	  <dependency id="Microsoft.AspNet.OData" version="5.7.0" />
+	  <dependency id="Newtonsoft.Json" version="6.0.0" />
     </dependencies> 
   </metadata>
   <files>
