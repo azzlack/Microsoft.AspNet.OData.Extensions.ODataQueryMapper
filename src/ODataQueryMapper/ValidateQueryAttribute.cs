@@ -48,10 +48,7 @@
             var data = objectContent.Value as IODataCollection;
             if (data != null && request.ODataProperties().Path != null)
             {
-                if (!request.ODataProperties().TotalCount.HasValue && request.GetQueryNameValuePairs().Any(x => x.Key == "$count" && x.Value == "true"))
-                {
-                    request.ODataProperties().TotalCount = data.Count;
-                }
+                request.ODataProperties().TotalCount = data.Count;
 
                 if (request.ODataProperties().NextLink == null && this.GetQuerySettings().PageSize.HasValue && Uri.IsWellFormedUriString(data.NextLink, UriKind.Absolute))
                 {

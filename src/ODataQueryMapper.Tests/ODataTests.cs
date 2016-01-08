@@ -148,8 +148,8 @@
 
             var result = JsonConvert.DeserializeObject<ODataCollection<DomainTrack>>(content);
 
-            Assert.AreEqual(50, result.Value.Count(), "Wrong number of items returned");
-            Assert.AreEqual("http://localhost/odata/track?$top=50&$skip=50", result.NextLink, "NextLink is wrong");
+            Assert.AreEqual(100, result.Value.Count(), "Wrong number of items returned");
+            Assert.AreEqual(null, result.NextLink, "NextLink is wrong");
         }
 
         [Test]

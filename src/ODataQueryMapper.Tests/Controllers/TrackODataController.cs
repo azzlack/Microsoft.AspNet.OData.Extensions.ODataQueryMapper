@@ -10,7 +10,7 @@
     using System.Web.OData.Query;
     using System.Web.OData.Routing;
 
-    [ValidateQuery(AllowedQueryOptions = AllowedQueryOptions.Filter | AllowedQueryOptions.Count | AllowedQueryOptions.OrderBy | AllowedQueryOptions.Skip | AllowedQueryOptions.Top, PageSize = 50)]
+    [ValidateQuery(AllowedQueryOptions = AllowedQueryOptions.Filter | AllowedQueryOptions.Count | AllowedQueryOptions.OrderBy | AllowedQueryOptions.Skip | AllowedQueryOptions.Top)]
     public class TrackODataController : ODataController
     {
         private readonly ITrackFunctions trackFunctions;

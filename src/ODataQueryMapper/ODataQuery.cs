@@ -47,8 +47,6 @@
 
             if (querySettings != null)
             {
-                var total = collection.Count();
-
                 var settingsResult = base.ApplyTo(
                     collection,
                     new ODataQuerySettings()
@@ -57,6 +55,8 @@
                         EnableConstantParameterization = querySettings.EnableConstantParameterization,
                         HandleNullPropagation = querySettings.HandleNullPropagation
                     }) as IQueryable<T>;
+
+                var total = this.IsCountQuery() ? collection.Count() : settingsResult.Count();
 
                 if (querySettings.PageSize.HasValue)
                 {
@@ -87,6 +87,11 @@
         public override string ToString()
         {
             return this.Options.ToODataUriString();
+        }
+
+        private bool IsCountQuery()
+        {
+            return this.Request.GetQueryNameValuePairs().Any(x => x.Key == "$count" && x.Value != null && x.Value.Equals("true", StringComparison.InvariantCultureIgnoreCase));
         }
 
         private IODataQueryable<T> LimitResults(IQueryable<T> collection, int total, int limit, out int resultsRemoved)
