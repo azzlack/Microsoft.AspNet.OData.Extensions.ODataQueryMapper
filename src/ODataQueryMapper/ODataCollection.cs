@@ -34,9 +34,13 @@
             {
                 this.Value = ((JArray)collection).Select(x => x.ToObject<T>());
             }
-            else
+            else if (collection != null)
             {
                 this.Value = collection.Cast<T>().ToList();
+            }
+            else
+            {
+                this.Value = Enumerable.Empty<T>();
             }
         }
 
