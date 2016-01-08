@@ -1,10 +1,15 @@
 ﻿namespace Microsoft.AspNet.OData.Extensions.ODataQueryMapper
 {
+    using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Interfaces;
+    using System;
     using System.Linq;
+    using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Web.Http.Controllers;
+    using System.Web.Http.Filters;
     using System.Web.OData;
+    using System.Web.OData.Extensions;
     using System.Web.OData.Query;
 
     /// <summary>An attribute that only validates OData queries, and leaves the processing to others.</summary>
@@ -22,6 +27,39 @@
         public override IQueryable ApplyQuery(IQueryable queryable, ODataQueryOptions queryOptions)
         {
             return queryable;
+        }
+
+        public override Task OnActionExecutedAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
+        {
+            var request = actionExecutedContext.Request;
+            var response = actionExecutedContext.Response;
+
+            if (response?.Content == null || !response.IsSuccessStatusCode)
+            {
+                return base.OnActionExecutedAsync(actionExecutedContext, cancellationToken);
+            }
+
+            var objectContent = response.Content as ObjectContent;
+            if (objectContent == null)
+            {
+                return base.OnActionExecutedAsync(actionExecutedContext, cancellationToken);
+            }
+
+            var data = objectContent.Value as IODataCollection;
+            if (data != null && request.ODataProperties().Path != null)
+            {
+                if (!request.ODataProperties().TotalCount.HasValue)
+                {
+                    request.ODataProperties().TotalCount = data.Count;
+                }
+
+                if (request.ODataProperties().NextLink == null && Uri.IsWellFormedUriString(data.NextLink, UriKind.Absolute))
+                {
+                    request.ODataProperties().NextLink = new Uri(data.NextLink);
+                }
+            }
+
+            return base.OnActionExecutedAsync(actionExecutedContext, cancellationToken);
         }
 
         private ODataQuerySettings GetQuerySettings()

@@ -74,7 +74,7 @@
                     return limitedResults;
                 }
 
-                return new ODataQueryable<T>(settingsResult, settingsResult.Count());
+                return new ODataQueryable<T>(settingsResult, total);
             }
 
             var result = base.ApplyTo(collection) as IQueryable<T>;
