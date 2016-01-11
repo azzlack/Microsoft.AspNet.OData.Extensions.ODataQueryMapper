@@ -50,7 +50,7 @@
             {
                 request.ODataProperties().TotalCount = data.Count;
 
-                if (request.ODataProperties().NextLink == null && this.GetQuerySettings().PageSize.HasValue && Uri.IsWellFormedUriString(data.NextLink, UriKind.Absolute))
+                if (this.GetQuerySettings().PageSize.HasValue && Uri.IsWellFormedUriString(data.NextLink, UriKind.Absolute))
                 {
                     request.ODataProperties().NextLink = new Uri(data.NextLink);
                 }

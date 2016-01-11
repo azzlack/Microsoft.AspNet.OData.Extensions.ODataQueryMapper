@@ -44,7 +44,7 @@
         }
 
         [Test]
-        public async Task GetAlbums_WhenGivenPagedODataQuery_ReturnsAlbums()
+        public async Task GetAlbums_WhenGivenPagedODataQuery_ReturnsPagedAlbums()
         {
             var response = await this.server.HttpClient.GetAsync($"odata/album?$top=100");
             var content = await response.Content.ReadAsStringAsync();
@@ -55,6 +55,19 @@
 
             Assert.AreEqual(50, result.Value.Count(), "Wrong number of items returned");
             Assert.AreEqual("http://localhost/odata/album?$top=50&$skip=50", result.NextLink, "NextLink is wrong");
+        }
+
+        [Test]
+        public async Task GetAlbums_WhenGivenPagedODataQuery_ReturnsCorrectNextLink()
+        {
+            var response = await this.server.HttpClient.GetAsync($"odata/album?$top=300&$skip=100");
+            var content = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine(content);
+
+            var result = JsonConvert.DeserializeObject<ODataCollection<DomainAlbum>>(content);
+
+            Assert.AreEqual($"http://localhost/odata/album?$top=250&$skip=150", result.NextLink, "NextLink is wrong");
         }
 
         [Test]
