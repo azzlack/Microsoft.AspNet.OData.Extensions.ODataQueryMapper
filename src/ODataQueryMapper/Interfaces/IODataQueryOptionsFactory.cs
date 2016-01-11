@@ -13,5 +13,12 @@
         /// <param name="request">The request.</param>
         /// <returns>An OData query object.</returns>
         IODataQuery<T> Create<T>(Dictionary<string, string> clauses, ODataQueryContext context, HttpRequestMessage request);
+
+        /// <summary>Modifies the original query and returns a new one.</summary>
+        /// <typeparam name="T">The object type.</typeparam>
+        /// <param name="clauses">The clauses.</param>
+        /// <param name="original">The original query.</param>
+        /// <returns>A new query.</returns>
+        IODataQuery<T> Modify<T>(Dictionary<string, string> clauses, IODataQuery<T> original);
     }
 }

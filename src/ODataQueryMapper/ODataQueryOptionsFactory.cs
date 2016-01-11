@@ -56,6 +56,66 @@
             return new ODataQuery<T>(context, mappedRequest);
         }
 
+        /// <summary>Modifies the original query and returns a new one.</summary>
+        /// <typeparam name="T">The object type.</typeparam>
+        /// <param name="clauses">The clauses.</param>
+        /// <param name="original">The original query.</param>
+        /// <returns>A new query.</returns>
+        public IODataQuery<T> Modify<T>(Dictionary<string, string> clauses, IODataQuery<T> original)
+        {
+            var builder = new UriBuilder(original.Options.Request.RequestUri);
+
+            // Modify query string items
+            var querystring = this.GetQueryParameters(original.Options.Request, original.Options.Context);
+
+            if (clauses.ContainsKey("$filter"))
+            {
+                if (!querystring.ContainsKey("$filter"))
+                {
+                    throw new ArgumentException("Cannot modify $filter if it does not already exist");
+                }
+
+                querystring["$filter"] = querystring["$filter"] + clauses["$filter"];
+            }
+
+            if (clauses.ContainsKey("$orderby"))
+            {
+                if (!querystring.ContainsKey("$orderby"))
+                {
+                    throw new ArgumentException("Cannot modify $orderby if it does not already exist");
+                }
+
+                querystring["$orderby"] = querystring["$orderby"] + clauses["$orderby"];
+            }
+
+            if (clauses.ContainsKey("$expand"))
+            {
+                if (!querystring.ContainsKey("$expand"))
+                {
+                    throw new ArgumentException("Cannot modify $expand if it does not already exist");
+                }
+
+                querystring["$expand"] = querystring["$expand"] + clauses["$expand"];
+            }
+
+            if (clauses.ContainsKey("$select"))
+            {
+                if (!querystring.ContainsKey("$select"))
+                {
+                    throw new ArgumentException("Cannot modify $select if it does not already exist");
+                }
+
+                querystring["$select"] = querystring["$select"] + clauses["$select"];
+            }
+
+            builder.Query = string.Join("&", querystring.Select(x => $"{x.Key}={x.Value}"));
+
+            var mappedRequest = this.Clone(original.Options.Request);
+            mappedRequest.RequestUri = builder.Uri;
+
+            return new ODataQuery<T>(original.Options.Context, mappedRequest);
+        }
+
         private HttpRequestMessage Clone(HttpRequestMessage req)
         {
             var clone = new HttpRequestMessage(req.Method, req.RequestUri)

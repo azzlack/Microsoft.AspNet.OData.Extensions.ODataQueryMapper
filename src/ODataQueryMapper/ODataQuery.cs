@@ -16,14 +16,20 @@
         /// <summary>Initializes a new instance of the <see cref="ODataQuery{T}"/> class.</summary>
         /// <param name="context">The context.</param>
         /// <param name="request">The request.</param>
+        /// <param name="queryOptionsFactory"></param>
         public ODataQuery(ODataQueryContext context, HttpRequestMessage request)
             : base(context, request)
         {
+            this.FilterExpression = new FilterExpression<T>(new ODataQueryOptionsFactory(), this);
         }
 
         /// <summary>Gets the <see cref="ODataQueryOptions{T}"/> instance.</summary>
         /// <value>The ODataQueryOptions instance.</value>
         public ODataQueryOptions<T> Options => this;
+
+        /// <summary>Gets the filter expression.</summary>
+        /// <value>The filter expression.</value>
+        public IFilterExpression<T> FilterExpression { get; }
 
         /// <summary>Applies the OData query to the specified collection.</summary>
         /// <param name="collection">The collection.</param>
