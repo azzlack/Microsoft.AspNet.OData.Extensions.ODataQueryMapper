@@ -49,7 +49,11 @@
             this.Count = count;
             this.NextLink = nextLink;
 
-            if (collection is JArray)
+            if (collection == null)
+            {
+                this.Value = Enumerable.Empty<T>();
+            }
+            else if (collection is JArray)
             {
                 this.Value = ((JArray)collection).Select(x => x.ToObject<T>());
             }
