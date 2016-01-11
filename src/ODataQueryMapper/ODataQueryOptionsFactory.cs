@@ -72,40 +72,48 @@
             {
                 if (!querystring.ContainsKey("$filter"))
                 {
-                    throw new ArgumentException("Cannot modify $filter if it does not already exist");
+                    querystring["$filter"] = clauses["$filter"];
                 }
-
-                querystring["$filter"] = querystring["$filter"] + clauses["$filter"];
+                else
+                {
+                    querystring["$filter"] = querystring["$filter"] + clauses["$filter"];
+                }
             }
 
             if (clauses.ContainsKey("$orderby"))
             {
                 if (!querystring.ContainsKey("$orderby"))
                 {
-                    throw new ArgumentException("Cannot modify $orderby if it does not already exist");
+                    querystring["$orderby"] = clauses["$orderby"];
                 }
-
-                querystring["$orderby"] = querystring["$orderby"] + clauses["$orderby"];
+                else
+                {
+                    querystring["$orderby"] = querystring["$orderby"] + clauses["$orderby"];
+                }
             }
 
             if (clauses.ContainsKey("$expand"))
             {
                 if (!querystring.ContainsKey("$expand"))
                 {
-                    throw new ArgumentException("Cannot modify $expand if it does not already exist");
+                    querystring["$expand"] = clauses["$expand"];
                 }
-
-                querystring["$expand"] = querystring["$expand"] + clauses["$expand"];
+                else
+                {
+                    querystring["$expand"] = querystring["$expand"] + clauses["$expand"];
+                }
             }
 
             if (clauses.ContainsKey("$select"))
             {
                 if (!querystring.ContainsKey("$select"))
                 {
-                    throw new ArgumentException("Cannot modify $select if it does not already exist");
+                    querystring["$select"] = clauses["$select"];
                 }
-
-                querystring["$select"] = querystring["$select"] + clauses["$select"];
+                else
+                {
+                    querystring["$select"] = querystring["$select"] + clauses["$select"];
+                }
             }
 
             builder.Query = string.Join("&", querystring.Select(x => $"{x.Key}={x.Value}"));
