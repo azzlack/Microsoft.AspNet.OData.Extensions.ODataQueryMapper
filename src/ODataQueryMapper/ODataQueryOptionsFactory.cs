@@ -72,7 +72,7 @@
             {
                 if (!querystring.ContainsKey("$filter"))
                 {
-                    querystring["$filter"] = clauses["$filter"];
+                    querystring["$filter"] = clauses["$filter"].Trim().StartsWith("and") ? clauses["$filter"].Trim().Replace("and ", "") : clauses["$filter"];
                 }
                 else
                 {
@@ -84,7 +84,7 @@
             {
                 if (!querystring.ContainsKey("$orderby"))
                 {
-                    querystring["$orderby"] = clauses["$orderby"];
+                    querystring["$orderby"] = clauses["$orderby"].Trim().StartsWith(",") ? clauses["$orderby"].Trim().Substring(1) : clauses["$orderby"];
                 }
                 else
                 {
@@ -96,7 +96,7 @@
             {
                 if (!querystring.ContainsKey("$expand"))
                 {
-                    querystring["$expand"] = clauses["$expand"];
+                    querystring["$expand"] = clauses["$expand"].Trim().StartsWith(",") ? clauses["$expand"].Trim().Substring(1) : clauses["$expand"];
                 }
                 else
                 {
@@ -108,7 +108,7 @@
             {
                 if (!querystring.ContainsKey("$select"))
                 {
-                    querystring["$select"] = clauses["$select"];
+                    querystring["$select"] = clauses["$select"].Trim().StartsWith(",") ? clauses["$select"].Trim().Substring(1) : clauses["$select"];
                 }
                 else
                 {

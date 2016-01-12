@@ -36,7 +36,7 @@
         }
 
         [Test]
-        public void CreateODataQuery_WhenFilterIsModified_ReturnsQuery()
+        public void CreateODataQuery_WhenExistingFilterIsModified_ReturnsQuery()
         {
             var q = ODataQuery.Create<Album>("$filter=Id le 10&$orderby=Id&$top=10&$skip=5");
             var m = q.FilterExpression.And("contains(tolower(Title), 'rock')").Or("contains(tolower(Title), 'hell')").GetQuery();
@@ -45,6 +45,18 @@
             Assert.AreEqual(q.Options.Skip.RawValue, m.Options.Skip.RawValue);
             Assert.AreEqual(q.Options.OrderBy.RawValue, m.Options.OrderBy.RawValue);
             Assert.AreEqual("Id le 10 and contains(tolower(Title), 'rock') or contains(tolower(Title), 'hell')", m.Options.Filter.RawValue);
+        }
+
+        [Test]
+        public void CreateODataQuery_WhenEmptyFilterIsModified_ReturnsQuery()
+        {
+            var q = ODataQuery.Create<Album>("$orderby=Id&$top=10&$skip=5");
+            var m = q.FilterExpression.And("contains(tolower(Title), 'rock')").Or("contains(tolower(Title), 'hell')").GetQuery();
+
+            Assert.AreEqual(q.Options.Top.RawValue, m.Options.Top.RawValue);
+            Assert.AreEqual(q.Options.Skip.RawValue, m.Options.Skip.RawValue);
+            Assert.AreEqual(q.Options.OrderBy.RawValue, m.Options.OrderBy.RawValue);
+            Assert.AreEqual("contains(tolower(Title), 'rock') or contains(tolower(Title), 'hell')", m.Options.Filter.RawValue);
         }
 
         [Test]
