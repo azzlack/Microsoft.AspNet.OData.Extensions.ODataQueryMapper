@@ -72,7 +72,18 @@
             {
                 if (!querystring.ContainsKey("$filter"))
                 {
-                    querystring["$filter"] = clauses["$filter"].Trim().StartsWith("and") ? clauses["$filter"].Trim().Replace("and ", "") : clauses["$filter"];
+                    if (clauses["$filter"].Trim().StartsWith("and"))
+                    {
+                        querystring["$filter"] = clauses["$filter"].Trim().Substring(3).Trim();
+                    }
+                    else if (clauses["$filter"].Trim().StartsWith("or"))
+                    {
+                        querystring["$filter"] = clauses["$filter"].Trim().Substring(2).Trim();
+                    }
+                    else
+                    {
+                        querystring["$filter"] = clauses["$filter"];
+                    }
                 }
                 else
                 {
