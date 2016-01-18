@@ -95,6 +95,32 @@
             Assert.AreEqual(HttpStatusCode.InternalServerError, response.StatusCode);
         }
 
+        [Test]
+        public async Task GetAlbums_WhenGivenFilterAndCountQuery_ReturnsCountLargerThanResultLength()
+        {
+            var response = await this.server.HttpClient.GetAsync($"odata/album?$filter=contains(tolower(Title), 'rock')&$count=true");
+            var content = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine(content);
+
+            var data = JsonConvert.DeserializeObject<ODataCollection<DomainAlbum>>(content);
+
+            Assert.Greater(data.Count, data.Value.Count());
+        }
+
+        [Test]
+        public async Task GetAlbums_WhenGivenTopAndFilterWithoutCountQuery_ReturnsCountEqualToResultLength()
+        {
+            var response = await this.server.HttpClient.GetAsync($"odata/album?$top=200&$filter=contains(tolower(Title), 'rock')");
+            var content = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine(content);
+
+            var data = JsonConvert.DeserializeObject<ODataCollection<DomainAlbum>>(content);
+
+            Assert.AreEqual(data.Count, data.Value.Count());
+        }
+
         [TestCase("$top=10&$skip=10&")]
         [TestCase("$top=10&$skip=10&$count=true")]
         [TestCase("$top=50&$skip=100")]

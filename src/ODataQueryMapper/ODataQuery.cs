@@ -64,6 +64,8 @@
 
                 var total = this.IsCountQuery() ? collection.Count() : settingsResult.Count();
 
+                this.Request.ODataProperties().TotalCount = total;
+
                 if (querySettings.PageSize.HasValue)
                 {
                     int resultsRemoved;
@@ -102,7 +104,7 @@
 
         private IODataQueryable<T> LimitResults(IQueryable<T> collection, int total, int limit, out int resultsRemoved)
         {
-            resultsRemoved = this.IsCountQuery() ? collection.Count() : total - limit;
+            resultsRemoved = this.IsCountQuery() ? (collection.Count() - limit) : (total - limit);
 
             return new ODataQueryable<T>(collection.Take(limit), total);
         }
