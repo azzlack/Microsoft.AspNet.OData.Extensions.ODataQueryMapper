@@ -67,7 +67,7 @@
                 if (querySettings.PageSize.HasValue)
                 {
                     int resultsRemoved;
-                    var limitedResults = this.LimitResults(settingsResult, total, querySettings.PageSize.Value, out resultsRemoved);
+                    var limitedResults = this.LimitResults(settingsResult, this.IsCountQuery() ? settingsResult.Count() : total, querySettings.PageSize.Value, out resultsRemoved);
 
                     if (resultsRemoved > 0 && this.Request.RequestUri != null && this.Request.ODataProperties().NextLink == null)
                     {
