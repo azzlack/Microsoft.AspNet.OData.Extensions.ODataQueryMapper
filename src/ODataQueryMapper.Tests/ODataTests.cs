@@ -95,6 +95,36 @@
             Assert.AreEqual(HttpStatusCode.InternalServerError, response.StatusCode);
         }
 
+        [TestCase("$top=10&$skip=10&")]
+        [TestCase("$top=10&$skip=10&$count=true")]
+        [TestCase("$top=50&$skip=100")]
+        [TestCase("$top=50&$skip=100&$count=true")]
+        public async void GetAlbums_WhenGivenTopAndSkipLowerThanPageSize_ReturnsNoNextLink(string query)
+        {
+            var getResponse = await this.server.HttpClient.GetAsync($"odata/album?{query}");
+            var content = await getResponse.Content.ReadAsStringAsync();
+
+            var data = JsonConvert.DeserializeObject<ODataCollection<DomainAlbum>>(content);
+
+            Assert.IsNullOrEmpty(data.NextLink);
+        }
+
+        [TestCase("$top=100&$skip=10&")]
+        [TestCase("$top=100&$skip=10&$count=true")]
+        [TestCase("$top=500&$skip=100")]
+        [TestCase("$top=500&$skip=100&$count=true")]
+        public async void GetAlbums_WhenGivenTopAndSkipLargerThanPageSize_ReturnsNextLink(string query)
+        {
+            var getResponse = await this.server.HttpClient.GetAsync($"odata/album?{query}");
+            var content = await getResponse.Content.ReadAsStringAsync();
+
+            var data = JsonConvert.DeserializeObject<ODataCollection<DomainAlbum>>(content);
+
+            Console.WriteLine($"NextLink: {data.NextLink}");
+
+            Assert.IsNotNullOrEmpty(data.NextLink);
+        }
+
         [TestCase("")]
         [TestCase("$top=10&$count=true")]
         [TestCase("$top=10")]
