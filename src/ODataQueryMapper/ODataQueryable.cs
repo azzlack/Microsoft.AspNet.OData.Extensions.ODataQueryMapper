@@ -99,7 +99,10 @@
                         tcs.SetResult(this.values.ToList().AsQueryable());
                     }).ConfigureAwait(false);
 
-            return new ODataQueryable<T>(await tcs.Task, this.Count);
+            var r = new ODataQueryable<T>(await tcs.Task, this.Count);
+            r.NextLink = this.NextLink;
+
+            return r;
         }
 
         /// <summary>
