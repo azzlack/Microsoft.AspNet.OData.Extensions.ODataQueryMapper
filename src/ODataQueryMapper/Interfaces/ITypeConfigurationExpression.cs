@@ -10,6 +10,6 @@
         /// <summary>Configures the entity.</summary>
         /// <param name="entityConfiguration">The entity configuration expression.</param>
         /// <returns>This instance.</returns>
-        ITypeConfigurationExpression<T> ForEntity(Expression<Action<EntityTypeConfiguration<T>>> entityConfiguration);
+        ITypeConfiguration<T> ForEntity(Expression<Action<EntityTypeConfiguration<T>>> entityConfiguration);
     }
 }

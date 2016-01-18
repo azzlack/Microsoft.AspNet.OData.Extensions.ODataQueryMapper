@@ -14,7 +14,7 @@
             configuration.CreateMap<DomainArtist, Artist>("artist").ConvertUsing<ArtistConverter>();
 
             configuration.Configure<DomainTrack>("track").ConfigureUsing<TrackConfigurator>(); // TODO: ITypeConfigurator must be able to map stuff
-            configuration.Configure<DomainTrack>("track").CreateMap<Track>().ConvertUsing<TrackConverter>();
+            configuration.Configure<DomainTrack>("track").ForEntity(x => x.HasKey(y => y.Wbs)).CreateMap<Track>().ConvertUsing<TrackConverter>();
 
             configuration.Configure<Track>("Track", x => x.HasKey(y => y.TrackId));
         }

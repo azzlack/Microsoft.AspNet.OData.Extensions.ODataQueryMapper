@@ -50,7 +50,7 @@
         /// <summary>Configures the entity.</summary>
         /// <param name="entityConfiguration">The entity configuration expression.</param>
         /// <returns>This instance.</returns>
-        public ITypeConfigurationExpression<T> ForEntity(Expression<Action<EntityTypeConfiguration<T>>> entityConfiguration)
+        public ITypeConfiguration<T> ForEntity(Expression<Action<EntityTypeConfiguration<T>>> entityConfiguration)
         {
             this.typeConfigurations.Add(entityConfiguration);
 
