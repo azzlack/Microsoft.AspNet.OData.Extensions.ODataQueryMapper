@@ -148,6 +148,52 @@
             Assert.AreEqual(1, p.Count());
         }
 
+        [TestCase("$filter=tolower(Name) eq 'Test & test'")]
+        [TestCase("$filter=tolower(Name) eq 'Test & test'&$orderby=Name")]
+        public void CreateOptions_WhenGivenValidQuery_ReturnsValidQueryOptions(string query)
+        {
+            var f = new ODataQueryFactory();
+            var options = f.CreateOptions<Album>(query, ODataQueryMapper.Engine.Configuration);
+
+            Console.WriteLine($"Original: {query}");
+            Console.WriteLine($"Created: {options.ToODataUriString()}");
+
+            Assert.AreEqual(query, options.ToODataUriString());
+        }
+
+        [TestCase("$filter=tolower(Name) eq 'Test & test'")]
+        [TestCase("$filter=tolower(Name) eq 'Test & test'&$orderby=Name")]
+        public void Map_WhenGivenQuery_ReturnsSameQuery(string query)
+        {
+            var f = new ODataQueryFactory();
+            var options = f.CreateOptions<Album>(query, ODataQueryMapper.Engine.Configuration);
+
+            var mappedQuery = ODataQueryMapper.Engine.Map<Album, DomainAlbum>(options);
+
+            Console.WriteLine($"Original: {options.ToODataUriString()}");
+            Console.WriteLine($"Mapped: {mappedQuery.RawValue}");
+
+            Assert.AreEqual(query, mappedQuery.RawValue);
+        }
+
+        [Test]
+        public void Modify_WhenGivenQuery_ReturnsModifiedQuery()
+        {
+            var f = new ODataQueryFactory();
+            var options = f.CreateOptions<Album>("$filter=tolower(Name) eq 'test & test'", ODataQueryMapper.Engine.Configuration);
+
+            var mappedQuery = new ODataQuery<Album>(options);
+            var modifiedQuery = f.Modify(new Dictionary<string, string>()
+            {
+                { "$orderby", "Name" }
+            }, mappedQuery);
+
+            Console.WriteLine($"Original: {mappedQuery.RawValue}");
+            Console.WriteLine($"Mapped: {modifiedQuery.RawValue}");
+
+            Assert.AreEqual("$filter=tolower(Name) eq 'test & test'&$orderby=Name", modifiedQuery.RawValue);
+        }
+
         [Test]
         public void IsEmpty_WhenGivenEmptyQuery_ReturnsTrue()
         {

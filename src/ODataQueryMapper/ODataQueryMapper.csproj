@@ -101,7 +101,7 @@
     <Compile Include="Interfaces\IMappingProfile.cs" />
     <Compile Include="Interfaces\IODataQuery.cs" />
     <Compile Include="Interfaces\IODataQueryMapper.cs" />
-    <Compile Include="Interfaces\IODataQueryOptionsFactory.cs" />
+    <Compile Include="Interfaces\IODataQueryFactory.cs" />
     <Compile Include="Interfaces\ITypeConfiguration.cs" />
     <Compile Include="Interfaces\ITypeConfigurationExpression.cs" />
     <Compile Include="Interfaces\ITypeConfigurator.cs" />
@@ -111,7 +111,7 @@
     <Compile Include="ODataQuery.cs" />
     <Compile Include="ODataQueryable.cs" />
     <Compile Include="ODataQueryMapper.cs" />
-    <Compile Include="ODataQueryOptionsFactory.cs" />
+    <Compile Include="ODataQueryFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serializers\ODataCollectionSerializer.cs" />
     <Compile Include="Serializers\ODataQueryableSerializer.cs" />

@@ -12,19 +12,19 @@
     public class ODataQueryMapper : IODataQueryMapper
     {
         /// <summary>The singleton.</summary>
-        private static readonly Lazy<IODataQueryMapper> Singleton = new Lazy<IODataQueryMapper>(() => new ODataQueryMapper(new ODataQueryOptionsFactory()));
+        private static readonly Lazy<IODataQueryMapper> Singleton = new Lazy<IODataQueryMapper>(() => new ODataQueryMapper(new ODataQueryFactory()));
 
         /// <summary>The odata query options factory.</summary>
-        private readonly IODataQueryOptionsFactory odataDataQueryOptionsFactory;
+        private readonly IODataQueryFactory odataDataQueryFactory;
 
         /// <summary>The configuration.</summary>
         private IConfiguration configuration;
 
         /// <summary>Initializes a new instance of the <see cref="ODataQueryMapper" /> class.</summary>
-        /// <param name="odataDataQueryOptionsFactory">The odata query options factory.</param>
-        internal ODataQueryMapper(IODataQueryOptionsFactory odataDataQueryOptionsFactory)
+        /// <param name="odataDataQueryFactory">The odata query options factory.</param>
+        internal ODataQueryMapper(IODataQueryFactory odataDataQueryFactory)
         {
-            this.odataDataQueryOptionsFactory = odataDataQueryOptionsFactory;
+            this.odataDataQueryFactory = odataDataQueryFactory;
         }
 
         /// <summary>Gets the configuration.</summary>
@@ -126,7 +126,7 @@
 
             var context = new ODataQueryContext(model, typeof(TDestination), query.Context.Path);
 
-            return this.odataDataQueryOptionsFactory.Create<TDestination>(clauses, context, query.Request);
+            return this.odataDataQueryFactory.Create<TDestination>(clauses, context, query.Request);
         }
 
         /// <summary>Creates a new version of the data model, containing the specified entity.</summary>

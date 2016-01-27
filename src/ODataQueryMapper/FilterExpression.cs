@@ -6,17 +6,17 @@
     public class FilterExpression<T> : IFilterExpression<T>
     {
         /// <summary>The query options factory.</summary>
-        private readonly IODataQueryOptionsFactory queryOptionsFactory;
+        private readonly IODataQueryFactory queryFactory;
 
         /// <summary>The query.</summary>
         private IODataQuery<T> query;
 
         /// <summary>Initializes a new instance of the <see cref="FilterExpression{T}" /> class.</summary>
-        /// <param name="queryOptionsFactory">The query options factory.</param>
+        /// <param name="queryFactory">The query options factory.</param>
         /// <param name="query">The query.</param>
-        internal FilterExpression(IODataQueryOptionsFactory queryOptionsFactory, IODataQuery<T> query)
+        internal FilterExpression(IODataQueryFactory queryFactory, IODataQuery<T> query)
         {
-            this.queryOptionsFactory = queryOptionsFactory;
+            this.queryFactory = queryFactory;
             this.query = query;
         }
 
@@ -25,7 +25,7 @@
         /// <returns>A filter expression.</returns>
         public IFilterExpression<T> And(string filter)
         {
-            this.query = this.queryOptionsFactory.Modify(new Dictionary<string, string> { { "$filter", $" and {filter}" } }, this.query);
+            this.query = this.queryFactory.Modify(new Dictionary<string, string> { { "$filter", $" and {filter}" } }, this.query);
 
             return this;
         }
@@ -35,7 +35,7 @@
         /// <returns>A filter expression.</returns>
         public IFilterExpression<T> Or(string filter)
         {
-            this.query = this.queryOptionsFactory.Modify(new Dictionary<string, string> { { "$filter", $" or {filter}" } }, this.query);
+            this.query = this.queryFactory.Modify(new Dictionary<string, string> { { "$filter", $" or {filter}" } }, this.query);
 
             return this;
         }

@@ -5,6 +5,10 @@
 
     public interface IODataQuery<T>
     {
+        /// <summary>Gets the raw value.</summary>
+        /// <value>The raw value.</value>
+        string RawValue { get; }
+
         /// <summary>Gets the <see cref="ODataQueryOptions{T}"/> instance.</summary>
         /// <value>The ODataQueryOptions instance.</value>
         ODataQueryOptions<T> Options { get; }

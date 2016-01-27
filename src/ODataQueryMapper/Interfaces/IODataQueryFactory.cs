@@ -3,10 +3,18 @@
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Web.OData;
+    using System.Web.OData.Query;
 
-    public interface IODataQueryOptionsFactory
+    public interface IODataQueryFactory
     {
         /// <summary>Creates a new ODataQueryOptions{T}</summary>
+        /// <typeparam name="T">Generic type parameter.</typeparam>
+        /// <param name="query">The query.</param>
+        /// <param name="configuration">The configuration.</param>
+        /// <returns>An OData query object.</returns>
+        ODataQueryOptions<T> CreateOptions<T>(string query, IConfiguration configuration);
+
+        /// <summary>Creates a new ODataQuery{T}</summary>
         /// <typeparam name="T">The object type.</typeparam>
         /// <param name="clauses">The clauses.</param>
         /// <param name="context">The context.</param>

@@ -20,8 +20,19 @@
         public ODataQuery(ODataQueryContext context, HttpRequestMessage request)
             : base(context, request)
         {
-            this.FilterExpression = new FilterExpression<T>(new ODataQueryOptionsFactory(), this);
+            this.FilterExpression = new FilterExpression<T>(new ODataQueryFactory(), this);
         }
+
+        /// <summary>Initializes a new instance of the <see cref="ODataQuery{T}"/> class.</summary>
+        /// <param name="queryOptions">The context.</param>
+        public ODataQuery(ODataQueryOptions queryOptions)
+            : this(queryOptions.Context, queryOptions.Request)
+        {
+        }
+
+        /// <summary>Gets the raw value.</summary>
+        /// <value>The raw value.</value>
+        public string RawValue => this.ToODataUriString();
 
         /// <summary>Gets the <see cref="ODataQueryOptions{T}"/> instance.</summary>
         /// <value>The ODataQueryOptions instance.</value>

@@ -9,9 +9,31 @@
     using System.Net.Http;
     using System.Threading.Tasks;
     using System.Web.OData;
+    using System.Web.OData.Query;
+    using System.Web.OData.Routing;
 
-    public class ODataQueryOptionsFactory : IODataQueryOptionsFactory
+    public class ODataQueryFactory : IODataQueryFactory
     {
+        /// <summary>Creates a new ODataQueryOptions{T}</summary>
+        /// <typeparam name="T">Generic type parameter.</typeparam>
+        /// <param name="query">The query.</param>
+        /// <param name="configuration">The configuration.</param>
+        /// <returns>An OData query object.</returns>
+        public ODataQueryOptions<T> CreateOptions<T>(string query, IConfiguration configuration)
+        {
+            var escapedQuery = this.EscapeODataQueryComponent(query);
+            var context = new ODataQueryContext(configuration.Model, typeof(T), new ODataPath());
+            var request = new HttpRequestMessage(HttpMethod.Get, $"http://localhost/?{escapedQuery}");
+
+            var builder = new UriBuilder(request.RequestUri);
+
+            // Escape query string items
+            var querystring = this.GetQueryParameters(request, context);
+            builder.Query = string.Join("&", querystring.Select(x => $"{x.Key}={this.EscapeODataQueryComponent(x.Value)}"));
+
+            return new ODataQueryOptions<T>(context, new HttpRequestMessage(HttpMethod.Get, builder.Uri));
+        }
+
         /// <summary>Creates a new ODataQueryOptions{T}</summary>
         /// <typeparam name="T">The object type.</typeparam>
         /// <param name="clauses">The clauses.</param>
@@ -48,7 +70,7 @@
                 querystring["$select"] = clauses["$select"];
             }
 
-            builder.Query = string.Join("&", querystring.Select(x => $"{x.Key}={x.Value}"));
+            builder.Query = string.Join("&", querystring.Select(x => $"{x.Key}={this.EscapeODataQueryComponent(x.Value)}"));
 
             var mappedRequest = this.Clone(request);
             mappedRequest.RequestUri = builder.Uri;
@@ -127,7 +149,7 @@
                 }
             }
 
-            builder.Query = string.Join("&", querystring.Select(x => $"{x.Key}={x.Value}"));
+            builder.Query = string.Join("&", querystring.Select(x => $"{x.Key}={this.EscapeODataQueryComponent(x.Value)}"));
 
             var mappedRequest = this.Clone(original.Options.Request);
             mappedRequest.RequestUri = builder.Uri;
@@ -227,6 +249,17 @@
         private QueryableRestrictionsAnnotation GetPropertyRestrictions(IEdmProperty edmProperty, IEdmModel edmModel)
         {
             return edmModel.GetAnnotationValue<QueryableRestrictionsAnnotation>(edmProperty);
+        }
+
+        private string EscapeODataQueryComponent(string query)
+        {
+            return query
+                .Replace("%", "%25")
+                .Replace("?", "%3B")
+                .Replace("+", "%2B")
+                .Replace("/", "%2F")
+                .Replace("#", "%23")
+                .Replace("&", "%26");
         }
     }
 }
