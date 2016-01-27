@@ -1,5 +1,7 @@
 Microsoft.AspNet.OData.Extensions.ODataQueryMapper
 -------------------------------------------
+[![TeamCity Build Status](https://img.shields.io/teamcity/https/teamcity.knowit.no/e/External_MicrosoftAspNetODataExtensionsODataQueryMapper_General_Release.svg?style=flat-square)](https://teamcity.knowit.no/viewType.html?buildTypeId=External_MicrosoftAspNetODataExtensionsODataQueryMapper_General_Release)  
+
 A query mapper for OData v4.0, Automapper style. This extension allows you to have a different domain model than your database model, and still be able to pass the OData query down to the database.
 
 ## Basic Usage
