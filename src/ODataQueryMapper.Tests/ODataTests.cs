@@ -151,6 +151,20 @@
             Assert.IsNotNullOrEmpty(data.NextLink);
         }
 
+        [TestCase("$apply=aggregate(Track/Milliseconds with countdistinct as TotalMilliseconds)")]
+        public async Task GetAlbums_WhenGivenAggregateODataQuery_ReturnsAlbums(string query)
+        {
+            var response = await this.server.HttpClient.GetAsync($"odata/album?{query}");
+            var content = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine($"{(int)response.StatusCode} {response.StatusCode}");
+            Console.WriteLine(content);
+
+            var result = JsonConvert.DeserializeObject<ODataCollection<DomainAlbum>>(content);
+
+            Assert.IsTrue(result.Value.Any(), "API returned no items");
+        }
+
         [TestCase("")]
         [TestCase("$top=10&$count=true")]
         [TestCase("$top=10")]
@@ -161,6 +175,20 @@
             var response = await this.server.HttpClient.GetAsync($"odata/artist?{query}");
             var content = await response.Content.ReadAsStringAsync();
 
+            Console.WriteLine(content);
+
+            var result = JsonConvert.DeserializeObject<ODataCollection<DomainArtist>>(content);
+
+            Assert.IsTrue(result.Value.Any(), "API returned no items");
+        }
+
+        [TestCase("$apply=aggregate(Album with countdistinct as TotalAlbums)")]
+        public async Task GetArtists_WhenGivenAggregateODataQuery_ReturnsArtists(string query)
+        {
+            var response = await this.server.HttpClient.GetAsync($"odata/artist?{query}");
+            var content = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine($"{(int)response.StatusCode} {response.StatusCode}");
             Console.WriteLine(content);
 
             var result = JsonConvert.DeserializeObject<ODataCollection<DomainArtist>>(content);
