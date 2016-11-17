@@ -16,20 +16,23 @@
 
         /// <summary>Creates an entity set with the specified type.</summary>
         /// <typeparam name="TSource">The source type.</typeparam>
+        /// <param name="hide">(Optional) true to hide from metadata document, false to show.</param>
         /// <returns>The type configuration.</returns>
-        ITypeConfiguration<TSource> Configure<TSource>() where TSource : class;
+        ITypeConfiguration<TSource> Configure<TSource>(bool hide = false) where TSource : class;
 
         /// <summary>Creates an entity set with the specified type and name.</summary>
         /// <typeparam name="TSource">The source type.</typeparam>
         /// <param name="entitySetName">The entity name set.</param>
+        /// <param name="hide">(Optional) true to hide from metadata document, false to show.</param>
         /// <returns>The type configuration.</returns>
-        ITypeConfiguration<TSource> Configure<TSource>(string entitySetName) where TSource : class;
+        ITypeConfiguration<TSource> Configure<TSource>(string entitySetName, bool hide = false) where TSource : class;
 
         /// <summary>Creates an entity set with the specified type and name.</summary>
         /// <typeparam name="TSource">The source type.</typeparam>
         /// <param name="entitySetName">The entity name set.</param>
         /// <param name="configurationExpression">The configuration expression.</param>
+        /// <param name="hide">(Optional) true to hide from metadata document, false to show.</param>
         /// <returns>The type configuration.</returns>
-        ITypeConfiguration<TSource> Configure<TSource>(string entitySetName, Action<EntityTypeConfiguration<TSource>> configurationExpression) where TSource : class;
+        ITypeConfiguration<TSource> Configure<TSource>(string entitySetName, Action<EntityTypeConfiguration<TSource>> configurationExpression, bool hide = false) where TSource : class;
     }
 }

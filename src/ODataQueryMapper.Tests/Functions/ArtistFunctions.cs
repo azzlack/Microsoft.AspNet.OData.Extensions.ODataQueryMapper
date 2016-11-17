@@ -12,11 +12,11 @@
     {
         private readonly IArtistRepository artistRepository;
 
-        private readonly IMappingEngine mapper;
+        private readonly IMapper mapper;
 
         private readonly IODataQueryMapper odataMapper;
 
-        public ArtistFunctions(IArtistRepository artistRepository, IMappingEngine mapper, IODataQueryMapper odataMapper)
+        public ArtistFunctions(IArtistRepository artistRepository, IMapper mapper, IODataQueryMapper odataMapper)
         {
             this.artistRepository = artistRepository;
             this.mapper = mapper;

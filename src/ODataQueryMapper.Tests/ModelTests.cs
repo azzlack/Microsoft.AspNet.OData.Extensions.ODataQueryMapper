@@ -8,11 +8,17 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
+    using System.Web.Http;
+    using System.Web.Http.Hosting;
     using System.Web.OData.Query;
+
+    using Microsoft.AspNet.OData.Extensions.ODataQueryMapper.Enumerations;
 
     [TestFixture]
     public class ModelTests
     {
+        private HttpConfiguration httpConfiguration;
+
         [SetUp]
         public void SetUp()
         {
@@ -25,6 +31,9 @@
 
                     x.AddProfile<TestProfile>();
                 });
+
+            this.httpConfiguration = new HttpConfiguration();
+            this.httpConfiguration.Properties.AddOrUpdate(ODataKeys.NonODataRootContainerKey, new ODataServiceProvider(ODataQueryMapper.Engine.Configuration), (oldValue, newValue) => newValue);
         }
 
         [Test]
@@ -128,18 +137,13 @@
             var q =
                 ODataQuery.Default<Album>(
                     new HttpRequestMessage(HttpMethod.Get, "http://localhost/album")
-                    {
-                        Properties =
+                        {
+                            Properties =
                                 {
-                                    {
-                                        "odata.QuerySettings",
-                                        new ODataQuerySettings()
-                                            {
-                                                PageSize = 1
-                                            }
-                                    }
+                                        { "odata.QuerySettings", new ODataQuerySettings() { PageSize = 1 } },
+                                        { HttpPropertyKeys.HttpConfigurationKey, this.httpConfiguration }
                                 }
-                    });
+                        });
 
             var p = q.ApplyTo(c);
 

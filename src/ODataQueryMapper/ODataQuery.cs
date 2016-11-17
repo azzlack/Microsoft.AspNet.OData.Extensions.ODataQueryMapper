@@ -16,7 +16,6 @@
         /// <summary>Initializes a new instance of the <see cref="ODataQuery{T}"/> class.</summary>
         /// <param name="context">The context.</param>
         /// <param name="request">The request.</param>
-        /// <param name="queryOptionsFactory"></param>
         public ODataQuery(ODataQueryContext context, HttpRequestMessage request)
             : base(context, request)
         {
@@ -158,7 +157,7 @@
 
             var model = mapper.CreateModel<T>();
 
-            var request = new HttpRequestMessage(HttpMethod.Get, $"http://localhost/{typeof(T).Name}?{query}");
+            var request = HttpRequestMessageFactory.CreateMessage(HttpMethod.Get, $"http://localhost/{typeof(T).Name}?{query}", mapper.Configuration);
             var context = new ODataQueryContext(model, typeof(T), new ODataPath());
 
             return new ODataQuery<T>(context, request);
@@ -232,7 +231,7 @@
 
             var model = mapper.CreateModel<T>();
 
-            var request = new HttpRequestMessage(HttpMethod.Get, $"http://localhost/{typeof(T).Name}");
+            var request = HttpRequestMessageFactory.CreateMessage(HttpMethod.Get, $"http://localhost/{typeof(T).Name}", mapper.Configuration);
             var context = new ODataQueryContext(model, typeof(T), new ODataPath());
 
             return new ODataQuery<T>(context, request);
@@ -259,7 +258,6 @@
             }
 
             var model = mapper.CreateModel<T>();
-
             var context = new ODataQueryContext(model, typeof(T), new ODataPath());
 
             return new ODataQuery<T>(context, request);

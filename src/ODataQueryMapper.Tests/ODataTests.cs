@@ -151,7 +151,7 @@
             Assert.IsNotNullOrEmpty(data.NextLink);
         }
 
-        [TestCase("$apply=aggregate(Track/Milliseconds with countdistinct as TotalMilliseconds)")]
+        [TestCase("$apply=aggregate(Track/Milliseconds with sum as TotalMilliseconds)")]
         public async Task GetAlbums_WhenGivenAggregateODataQuery_ReturnsAlbums(string query)
         {
             var response = await this.server.HttpClient.GetAsync($"odata/album?{query}");

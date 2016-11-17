@@ -12,11 +12,11 @@
     {
         private readonly ITrackRepository trackRepository;
 
-        private readonly IMappingEngine mapper;
+        private readonly IMapper mapper;
 
         private readonly IODataQueryMapper odataMapper;
 
-        public TrackFunctions(ITrackRepository trackRepository, IMappingEngine mapper, IODataQueryMapper odataMapper)
+        public TrackFunctions(ITrackRepository trackRepository, IMapper mapper, IODataQueryMapper odataMapper)
         {
             this.trackRepository = trackRepository;
             this.mapper = mapper;

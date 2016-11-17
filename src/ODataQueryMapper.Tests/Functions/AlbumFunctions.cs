@@ -12,11 +12,11 @@
     {
         private readonly IAlbumRepository albumRepository;
 
-        private readonly IMappingEngine mapper;
+        private readonly IMapper mapper;
 
         private readonly IODataQueryMapper odataMapper;
 
-        public AlbumFunctions(IAlbumRepository albumRepository, IMappingEngine mapper, IODataQueryMapper odataMapper)
+        public AlbumFunctions(IAlbumRepository albumRepository, IMapper mapper, IODataQueryMapper odataMapper)
         {
             this.albumRepository = albumRepository;
             this.mapper = mapper;

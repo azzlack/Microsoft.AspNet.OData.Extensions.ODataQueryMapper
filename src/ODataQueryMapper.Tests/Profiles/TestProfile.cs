@@ -11,6 +11,7 @@
         /// <param name="configuration">The configuration.</param>
         public void Configure(IProfileConfiguration configuration)
         {
+            configuration.Configure<Artist>("artist2", x => x.HasKey(y => y.ArtistId), true);
             configuration.CreateMap<DomainArtist, Artist>("artist").ConvertUsing<ArtistConverter>();
 
             configuration.Configure<DomainTrack>("track").ConfigureUsing<TrackConfigurator>(); // TODO: ITypeConfigurator must be able to map stuff

@@ -23,7 +23,7 @@
         {
             var escapedQuery = this.EscapeODataQueryComponent(query);
             var context = new ODataQueryContext(configuration.Model, typeof(T), new ODataPath());
-            var request = new HttpRequestMessage(HttpMethod.Get, $"http://localhost/?{escapedQuery}");
+            var request = HttpRequestMessageFactory.CreateMessage(HttpMethod.Get, $"http://localhost/?{escapedQuery}", configuration);
 
             var builder = new UriBuilder(request.RequestUri);
 
@@ -31,7 +31,7 @@
             var querystring = this.GetQueryParameters(request, context);
             builder.Query = string.Join("&", querystring.Select(x => $"{x.Key}={this.EscapeODataQueryComponent(x.Value)}"));
 
-            return new ODataQueryOptions<T>(context, new HttpRequestMessage(HttpMethod.Get, builder.Uri));
+            return new ODataQueryOptions<T>(context, HttpRequestMessageFactory.CreateMessage(HttpMethod.Get, builder.Uri, configuration));
         }
 
         /// <summary>Creates a new ODataQueryOptions{T}</summary>

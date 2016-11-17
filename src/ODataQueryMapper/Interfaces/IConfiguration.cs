@@ -17,6 +17,14 @@
         /// <value>The model.</value>
         IEdmModel Model { get; }
 
+        /// <summary>Gets the namespace.</summary>
+        /// <value>The namespace.</value>
+        string Namespace { get; }
+
+        /// <summary>Gets the name of the container.</summary>
+        /// <value>The name of the container.</value>
+        string ContainerName { get; }
+
         /// <summary>Adds the specified profile.</summary>
         /// <typeparam name="T">Generic type parameter.</typeparam>
         void AddProfile<T>() where T : IMappingProfile;

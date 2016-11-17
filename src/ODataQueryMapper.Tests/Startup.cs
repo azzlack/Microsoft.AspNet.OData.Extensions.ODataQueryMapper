@@ -12,6 +12,7 @@
     using SimpleInjector.Integration.WebApi;
     using System.Web.Http;
     using System.Web.OData.Extensions;
+    using System.Web.OData.Query;
 
     public class Startup
     {
@@ -34,8 +35,9 @@
                 x =>
                     {
                         x.CreateMap<DomainAlbum, Album>("album")
-                            .ForDestinationEntity(y => y.HasKey(z => z.AlbumId))
                             .ForMember(y => y.Id, y => y.AlbumId);
+                        x.Configure<Album>("album2", y => y.HasKey(z => z.AlbumId).Count().Filter().OrderBy(), true);
+
                         x.AddProfile<TestProfile>();
                     });
 
@@ -58,7 +60,7 @@
                });
 
             container.RegisterWebApiRequest(() => ODataQueryMapper.Engine);
-            container.RegisterWebApiRequest(() => Mapper.Engine);
+            container.RegisterWebApiRequest(() => Mapper.Instance);
             container.RegisterWebApiRequest<IAlbumRepository, AlbumRepository>();
             container.RegisterWebApiRequest<IArtistRepository, ArtistRepository>();
             container.RegisterWebApiRequest<ITrackRepository, TrackRepository>();
@@ -73,6 +75,7 @@
                 "DefaultApi",
                 "api/{controller}/{id}",
                 new { id = RouteParameter.Optional });
+            config.Count().Filter().OrderBy().Expand().Select().MaxTop(null);
             config.MapODataServiceRoute(
                 "DefaultOData",
                 "odata",

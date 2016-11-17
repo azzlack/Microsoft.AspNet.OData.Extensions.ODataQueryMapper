@@ -34,6 +34,9 @@
 
             this.InitializationExpression = initializationExpression;
             initializationExpression(this);
+
+            this.builder.Namespace = this.Namespace;
+            this.builder.ContainerName = this.ContainerName;
         }
 
         /// <summary>Gets a value indicating whether the sealed.</summary>
@@ -59,6 +62,14 @@
             }
         }
 
+        /// <summary>Gets the namespace.</summary>
+        /// <value>The namespace.</value>
+        public string Namespace { get; } = "OData";
+
+        /// <summary>Gets the name of the container.</summary>
+        /// <value>The name of the container.</value>
+        public string ContainerName { get; } = "Models";
+
         /// <summary>Creates a map between the two types.</summary>
         /// <typeparam name="TSource">The source type.</typeparam>
         /// <typeparam name="TDestination">The destination type.</typeparam>
@@ -82,25 +93,35 @@
         }
 
         /// <summary>Creates an entity set with the specified type.</summary>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when the requested operation is invalid.
+        /// </exception>
         /// <typeparam name="TSource">The source type.</typeparam>
+        /// <param name="hide">(Optional) true to hide from metadata document, false to show.</param>
         /// <returns>The type configuration.</returns>
-        public ITypeConfiguration<TSource> Configure<TSource>() where TSource : class
+        public ITypeConfiguration<TSource> Configure<TSource>(bool hide = false) where TSource : class
         {
             if (this.Sealed)
             {
                 throw new InvalidOperationException("The model is sealed. It cannot be modified outside of the Initialize function.");
             }
 
-            return this.Configure<TSource>(typeof(TSource).Name);
+            return this.Configure<TSource>(typeof(TSource).Name, hide);
         }
 
         /// <summary>Creates an entity set with the specified type and name.</summary>
         /// <typeparam name="TSource">The source type.</typeparam>
         /// <param name="entitySetName">The entity name set.</param>
+        /// <param name="hide">(Optional) true to hide from metadata document, false to show.</param>
         /// <returns>The type configuration.</returns>
-        public ITypeConfiguration<TSource> Configure<TSource>(string entitySetName) where TSource : class
+        public ITypeConfiguration<TSource> Configure<TSource>(string entitySetName, bool hide = false) where TSource : class
         {
             this.builder.EntitySet<TSource>(entitySetName);
+
+            if (hide)
+            {
+                this.builder.Ignore<TSource>();
+            }
 
             var configurations = this.GetOrInsertTypeConfiguration(typeof(TSource).FullName);
             var rules = this.GetOrInsertRuleSet(typeof(TSource).FullName);
@@ -109,11 +130,15 @@
         }
 
         /// <summary>Creates an entity set with the specified type and name.</summary>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when the requested operation is invalid.
+        /// </exception>
         /// <typeparam name="TSource">The source type.</typeparam>
         /// <param name="entitySetName">The entity name set.</param>
         /// <param name="configurationExpression">The configuration expression.</param>
+        /// <param name="hide">(Optional) true to hide from metadata document, false to show.</param>
         /// <returns>The type configuration.</returns>
-        public ITypeConfiguration<TSource> Configure<TSource>(string entitySetName, Action<EntityTypeConfiguration<TSource>> configurationExpression) where TSource : class
+        public ITypeConfiguration<TSource> Configure<TSource>(string entitySetName, Action<EntityTypeConfiguration<TSource>> configurationExpression, bool hide = false) where TSource : class
         {
             if (this.Sealed)
             {
@@ -121,6 +146,11 @@
             }
 
             this.builder.EntitySet<TSource>(entitySetName);
+
+            if (hide)
+            {
+                this.builder.Ignore<TSource>();
+            }
 
             var configurations = this.GetOrInsertTypeConfiguration(typeof(TSource).FullName);
             var rules = this.GetOrInsertRuleSet(typeof(TSource).FullName);
@@ -191,10 +221,7 @@
                 {
                     var exp = configurationExpression.Compile() as Action<EntityTypeConfiguration<T>>;
 
-                    if (exp != null)
-                    {
-                        exp(typeConfiguration);
-                    }
+                    exp?.Invoke(typeConfiguration);
                 }
             }
 
