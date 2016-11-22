@@ -152,6 +152,7 @@
         }
 
         [TestCase("$apply=aggregate(Track/Milliseconds with sum as TotalMilliseconds)")]
+        [Ignore("Microsoft OData v4 does not support nested aggregate queries: https://github.com/OData/odata.net/issues/463")]
         public async Task GetAlbums_WhenGivenAggregateODataQuery_ReturnsAlbums(string query)
         {
             var response = await this.server.HttpClient.GetAsync($"odata/album?{query}");
@@ -183,6 +184,7 @@
         }
 
         [TestCase("$apply=aggregate(Album with countdistinct as TotalAlbums)")]
+        [Ignore("Microsoft OData v4 does not support nested aggregate queries: https://github.com/OData/odata.net/issues/463")]
         public async Task GetArtists_WhenGivenAggregateODataQuery_ReturnsArtists(string query)
         {
             var response = await this.server.HttpClient.GetAsync($"odata/artist?{query}");
