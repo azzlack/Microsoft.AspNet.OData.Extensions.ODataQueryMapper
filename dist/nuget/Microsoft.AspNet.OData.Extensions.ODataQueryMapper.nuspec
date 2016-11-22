@@ -14,12 +14,12 @@
 	
 This extension allows you to have a different domain model than your database model, and still be able to pass the OData query down to the database.</description>
     <summary>A query mapper for OData v4.0, Automapper style.</summary>
-	<releaseNotes></releaseNotes>
+	<releaseNotes>Upgraded to support Microsoft.AspNet.OData v6.0.0</releaseNotes>
     <copyright>Copyright EyeCatch 2015</copyright>
     <language>en-US</language>
     <tags>odata webapi transform mapper mapping eyecatch</tags>
     <dependencies>
-	  <dependency id="Microsoft.AspNet.OData" version="5.7.0" />
+	  <dependency id="Microsoft.AspNet.OData" version="6.0.0" />
 	  <dependency id="Newtonsoft.Json" version="6.0.0" />
     </dependencies> 
   </metadata>
